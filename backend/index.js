@@ -6,8 +6,20 @@ const Property = require('./models/Property');
 const Appointment = require('./models/Appointment');
 const Inquiry = require('./models/Inquiry');
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
+const adminPath = path.join(__dirname, 'admin.json');
 
 dotenv.config();
+
+function getAdminCreds() {
+  return JSON.parse(fs.readFileSync(adminPath, 'utf8'));
+}
+function setAdminPassword(newPassword) {
+  const creds = getAdminCreds();
+  creds.password = newPassword;
+  fs.writeFileSync(adminPath, JSON.stringify(creds, null, 2));
+}
 
 const app = express();
 app.use(cors());
@@ -111,6 +123,27 @@ app.post('/api/contact', async (req, res) => {
   } catch (err) {
     console.error('Email send error:', err);
     res.status(500).json({ error: 'Failed to send email.' });
+  }
+});
+
+app.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body;
+  const creds = getAdminCreds();
+  if (username === creds.username && password === creds.password) {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, error: 'Invalid credentials' });
+  }
+});
+
+app.post('/api/admin/change-password', (req, res) => {
+  const { username, oldPassword, newPassword } = req.body;
+  const creds = getAdminCreds();
+  if (username === creds.username && oldPassword === creds.password) {
+    setAdminPassword(newPassword);
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, error: 'Invalid credentials' });
   }
 });
 
