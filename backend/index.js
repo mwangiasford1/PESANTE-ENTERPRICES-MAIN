@@ -150,6 +150,19 @@ app.post('/api/admin/change-password', (req, res) => {
 // --- Start Server and Sync DB ---
 const PORT = process.env.PORT || 4000;
 (async () => {
-  await sequelize.sync({ force: true }); // TEMP: force sync to update schema
-  app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection established successfully.');
+    
+    // Only sync in development, not in production
+    if (process.env.NODE_ENV !== 'production') {
+      await sequelize.sync({ force: true });
+      console.log('Database synced.');
+    }
+    
+    app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+    process.exit(1);
+  }
 })(); 

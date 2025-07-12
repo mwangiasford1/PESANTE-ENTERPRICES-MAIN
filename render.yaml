@@ -1,0 +1,41 @@
+services:
+  # Backend API Service
+  - type: web
+    name: pesante-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_HOST
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_PORT
+        value: 3306
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: CONTACT_EMAIL_PASS
+        sync: false
+
+  # Frontend Service
+  - type: web
+    name: pesante-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://pesante-backend.onrender.com
+
+databases:
+  - name: pesante-db
+    databaseName: pesante_db
+    user: pesante_user 
