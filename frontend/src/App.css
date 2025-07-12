@@ -89,7 +89,8 @@ body {
 }
 
 .navbar {
-  background: #e9e4d5;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(60, 40, 20, 0.06);
   padding: 1rem 0.5rem;
   display: flex;
   justify-content: center;
