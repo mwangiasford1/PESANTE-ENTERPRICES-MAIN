@@ -1,4 +1,4 @@
-import pesanteLogo from '../assets/images/PESaNTA LOGO !.jpg';
+import pesanteLogo from '../assets/images/pesante-logo.jpg';
 import './Hero.css';
 import { useState, useEffect, useRef } from 'react';
 
