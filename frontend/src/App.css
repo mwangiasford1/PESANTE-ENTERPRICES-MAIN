@@ -361,11 +361,26 @@ body {
   color: #b6a179;
 }
 
-.navbar li a, .navbar li > a, .navbar li > Link, .nav-btn {
+.nav-btn, .navbar li a, .navbar li > a, .navbar li > Link {
+  background: none;
+  border: 2px solid #3e2c18;
+  border-radius: 16px;
   color: #7c9a6d;
-  text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.3em 1.1em;
+  margin: 0 0.2em;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  outline: none;
+  box-sizing: border-box;
+  display: inline-block;
+}
+.nav-btn:hover, .navbar li a:hover, .navbar li > a:hover, .navbar li > Link:hover {
+  color: #b6a179;
+  border-color: #b6a179;
+  background: #f7f5ef;
 }
 
 @media (max-width: 900px) {
