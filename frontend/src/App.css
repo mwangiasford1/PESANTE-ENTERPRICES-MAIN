@@ -136,7 +136,7 @@ body {
     left: 0;
     width: 100vw;
     padding: 1rem 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(255, 254, 254, 0.05);
   }
   .navbar ul.open {
     display: flex;
@@ -343,6 +343,29 @@ body {
   padding: 2.5rem 2rem;
   margin: 2.5rem auto;
   max-width: 1100px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #7c9a6d;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-btn:hover, .navbar li a:hover {
+  color: #b6a179;
+}
+
+.navbar li a, .navbar li > a, .navbar li > Link, .nav-btn {
+  color: #7c9a6d;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 @media (max-width: 900px) {

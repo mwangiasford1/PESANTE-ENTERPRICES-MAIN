@@ -35,8 +35,8 @@ const Navbar = () => {
         <li><button className="nav-btn" onClick={() => handleNav('services')}>Services</button></li>
         <li><button className="nav-btn" onClick={() => handleNav('about')}>About</button></li>
         <li><button className="nav-btn" onClick={() => handleNav('contact')}>Contact</button></li>
-        <li><Link to="/properties" onClick={() => setOpen(false)}>Properties</Link></li>
-        <li><Link to="/appointment" onClick={() => setOpen(false)}>Appointment</Link></li>
+        <li><Link className="nav-btn" to="/properties" onClick={() => setOpen(false)}>Properties</Link></li>
+        <li><Link className="nav-btn" to="/appointment" onClick={() => setOpen(false)}>Appointment</Link></li>
         {/* <li><Link to="/admin">Admin Portal</Link></li> */}
       </ul>
     </nav>
