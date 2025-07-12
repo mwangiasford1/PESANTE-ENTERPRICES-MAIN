@@ -43,7 +43,9 @@ export default function Appointment() {
       {status && <div style={{ marginTop: 10, color: '#fff' }}>{status}</div>}
       <div className="appointment-info" style={{ fontSize: '1.05rem' }}>
         <p>Email: Pesante001@outlook.com</p>
-        <p>WhatsApp: +254 700 000000</p>
+        <p>WhatsApp: +254 722 899 340</p>
+        <p>OR</p>
+        <p>WhatsApp: +254 723 503 372</p>
       </div>
       <style>{`
         @media (max-width: 600px) {
