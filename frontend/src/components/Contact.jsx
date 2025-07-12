@@ -40,10 +40,7 @@ export default function Contact() {
         <p>Email: Pesante001@outlook.com</p>
         <p>WhatsApp / Office: +254 722 899 340</p>
         <p>OR</p>
-        <p>WhatApp / Office:+254723503372</p>
-
-
-        <
+        <p>WhatsApp / Office: +254 723 503 372</p>
       </div>
     </section>
   );
