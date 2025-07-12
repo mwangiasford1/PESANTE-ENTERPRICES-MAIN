@@ -38,7 +38,12 @@ export default function Contact() {
       <span style={{ color: "#fff", marginTop: 10 }}>{result}</span>
       <div className="contact-info">
         <p>Email: Pesante001@outlook.com</p>
-        <p>WhatsApp: +254 722 899 340</p>
+        <p>WhatsApp / Office: +254 722 899 340</p>
+        <p>OR</p>
+        <p>WhatApp / Office:+254723503372</p>
+
+
+        <
       </div>
     </section>
   );
