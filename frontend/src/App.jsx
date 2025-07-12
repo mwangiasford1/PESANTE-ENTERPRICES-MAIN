@@ -10,20 +10,29 @@ import AdminPortal from './components/AdminPortal';
 import { PropertiesProvider } from './components/PropertiesContext';
 import Login from './components/Login';
 import React, { useState } from 'react';
+import Footer from './components/Footer';
 
-const Navbar = () => (
-  <nav className="navbar">
-    <ul>
-      <li><Link to="/">Home</Link></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><Link to="/properties">Properties</Link></li>
-      <li><Link to="/appointment">Appointment</Link></li>
-      {/* <li><Link to="/admin">Admin Portal</Link></li> */}
-    </ul>
-  </nav>
-);
+const Navbar = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <nav className="navbar">
+      <div className="hamburger" onClick={() => setOpen(!open)}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <ul className={open ? 'open' : ''} onClick={() => setOpen(false)}>
+        <li><Link to="/">Home</Link></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><Link to="/properties">Properties</Link></li>
+        <li><Link to="/appointment">Appointment</Link></li>
+        {/* <li><Link to="/admin">Admin Portal</Link></li> */}
+      </ul>
+    </nav>
+  );
+};
 
 const Home = () => (
   <>
@@ -65,6 +74,7 @@ function App() {
             <Route path="/admin" element={<AdminRoute />} />
           </Routes>
         </Router>
+        <Footer />
       </PropertiesProvider>
     </div>
   );
