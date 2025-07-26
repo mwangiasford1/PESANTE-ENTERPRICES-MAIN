@@ -1,3 +1,5 @@
+// server.js
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -14,34 +16,33 @@ console.log("🌱 Current .env values:", {
   CONTACT_EMAIL: process.env.CONTACT_EMAIL,
 });
 
-// Middleware
+// 🛡️ Middleware setup
 app.use(cors({
   origin: 'http://localhost:5173', // Vite frontend
   credentials: true
 }));
 app.use(express.json());
 
-// MongoDB connection
+// 🔌 MongoDB connection test
 async function connectToMongoDB() {
   try {
     console.log("🔗 Connecting to MongoDB...");
     const client = new MongoClient(uri);
-
     await client.connect();
     console.log("✅ Connected to MongoDB Atlas");
 
-    const db = client.db(); // Uses the default DB from URI
+    const db = client.db(); // Uses DB from URI
 
-    // 📥 Insert a sample document into 'contacts' collection
+    // 📥 Sample document insertion
     const result = await db.collection("contacts").insertOne({
       name: "Test Entry",
       email: "test@example.com",
       created_at: new Date()
     });
 
-    console.log("📥 Document inserted with ID:", result.insertedId);
+    console.log("📥 Inserted sample document:", result.insertedId);
 
-    // 📂 List current collections
+    // 📂 List collections
     const collections = await db.listCollections().toArray();
     console.log("📂 Collections in DB:", collections.map(c => c.name));
   } catch (err) {
@@ -50,19 +51,20 @@ async function connectToMongoDB() {
 }
 connectToMongoDB();
 
-// Admin login route
+// 🔐 Admin login route
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
-  console.log(`Received data: Username: ${username}, Password: ${password}`);
+  console.log(`🔑 Login attempt: ${username}`);
 
-  // Simple hardcoded login logic
+  // ⚙️ Hardcoded login logic
   if (username === "admin" && password === "pesante254") {
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ success: true, message: "Login successful" });
   } else {
-    res.status(401).json({ message: "Login failed. Please try again." });
+    res.status(401).json({ success: false, message: "Invalid username or password" });
   }
 });
 
+// 🚀 Server startup
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
