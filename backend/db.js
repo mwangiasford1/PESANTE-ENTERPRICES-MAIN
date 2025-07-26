@@ -1,17 +1,18 @@
-const { Sequelize } = require('sequelize');
+const mongoose = require('mongoose');
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config')[env];
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  {
-    host: config.host,
-    port: config.port,
-    dialect: config.dialect,
-    logging: config.logging,
-  }
-);
+// Verbose logging to verify config loading
+console.log("🔍 NODE_ENV:", env);
+console.log("🔗 Connecting to MongoDB at:", config.uri);
 
-module.exports = sequelize; 
+mongoose.connect(config.uri, config.options)
+  .then(() => {
+    console.log(`✅ MongoDB connected successfully in ${env} mode`);
+  })
+  .catch((err) => {
+    console.error(`❌ MongoDB connection error:`, err.message);
+    process.exit(1); // Force exit on failure
+  });
+
+module.exports = mongoose;

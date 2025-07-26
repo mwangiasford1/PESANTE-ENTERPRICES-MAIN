@@ -2,27 +2,19 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'pesante_db',
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    dialect: 'mysql',
-    logging: false,
+    uri: process.env.MONGO_URI || 'mongodb://localhost:27017/pesante_db',
+    options: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
   },
   production: {
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 3306,
-    dialect: 'mysql',
-    logging: false,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    }
+    uri: process.env.MONGO_URI,
+    options: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      ssl: true,
+      tlsAllowInvalidCertificates: true, // similar to rejectUnauthorized: false
+    },
   },
-}; 
+};
