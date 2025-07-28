@@ -1,22 +1,29 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { getProperties } from '../api';
+import { createContext, useContext, useEffect, useState } from 'react';
+import * as api from '../api';
 
 const PropertiesContext = createContext();
 
-export function PropertiesProvider({ children }) {
+export const PropertiesProvider = ({ children }) => {
   const [properties, setProperties] = useState([]);
+  const [error, setError] = useState(null); // 🔴 Add error state
 
   useEffect(() => {
-    getProperties().then(setProperties);
+    api.getProperties()
+      .then(data => {
+        setProperties(data);
+        setError(null); // clear error if successful
+      })
+      .catch(err => {
+        console.error('API error:', err);
+        setError(err.message || 'Something went wrong');
+      });
   }, []);
 
   return (
-    <PropertiesContext.Provider value={{ properties, setProperties }}>
+    <PropertiesContext.Provider value={{ properties, error }}>
       {children}
     </PropertiesContext.Provider>
   );
-}
+};
 
-export function useProperties() {
-  return useContext(PropertiesContext);
-} 
+export const useProperties = () => useContext(PropertiesContext);

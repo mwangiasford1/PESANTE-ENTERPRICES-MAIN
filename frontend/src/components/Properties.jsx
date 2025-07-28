@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProperties } from './PropertiesContext';
 
 const Properties = () => {
-  const { properties } = useProperties();
+  const { properties, error } = useProperties(); // 🧠 error now available
   const [location, setLocation] = useState('');
   const [price, setPrice] = useState('');
   const [type, setType] = useState('');
@@ -18,6 +18,14 @@ const Properties = () => {
   return (
     <section className="properties-page">
       <h2>Properties</h2>
+
+      {/* 🛑 Error UI */}
+      {error && (
+        <div style={{ color: 'red', marginBottom: '1rem' }}>
+          Error: {error}
+        </div>
+      )}
+
       <div className="filter-bar">
         <input
           type="text"
@@ -39,16 +47,35 @@ const Properties = () => {
         </select>
         <button disabled>Filter</button>
       </div>
+
       <div className="properties-grid">
-        {filtered.length === 0 ? (
-          <div style={{color:'#b6a179'}}>No properties found.</div>
+        {!error && filtered.length === 0 ? (
+          <div style={{ color: '#b6a179' }}>No properties found.</div>
         ) : (
           filtered.map((p) => (
             <div className="property-card" key={p.id}>
               {p.image ? (
-                <img src={p.image} alt="Property" style={{width:'100%',height:'120px',objectFit:'cover',borderRadius:'8px',marginBottom:'1rem'}} />
+                <img
+                  src={p.image}
+                  alt="Property"
+                  style={{
+                    width: '100%',
+                    height: '120px',
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    marginBottom: '1rem'
+                  }}
+                />
               ) : (
-                <div className="property-img" style={{background:'#e9e4d5',height:'120px',borderRadius:'8px',marginBottom:'1rem'}}></div>
+                <div
+                  className="property-img"
+                  style={{
+                    background: '#e9e4d5',
+                    height: '120px',
+                    borderRadius: '8px',
+                    marginBottom: '1rem'
+                  }}
+                ></div>
               )}
               <h3>{p.title}</h3>
               <p>Location: {p.location}</p>
@@ -62,4 +89,4 @@ const Properties = () => {
   );
 };
 
-export default Properties; 
+export default Properties;
