@@ -1,9 +1,14 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+const mongoose = require('mongoose');
 
-const Appointment = sequelize.define('Appointment', {
-  name: { type: DataTypes.STRING, allowNull: false },
-  datetime: { type: DataTypes.STRING, allowNull: false },
+const appointmentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  datetime: { type: String, required: true }, // Consider switching to Date if you want to enforce datetime parsing
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'cancelled'],
+    default: 'pending'
+  },
+  created_at: { type: Date, default: Date.now }
 });
 
-module.exports = Appointment; 
+module.exports = mongoose.model('Appointment', appointmentSchema);

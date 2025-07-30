@@ -1,19 +1,28 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+const mongoose = require('mongoose');
 
-const Property = sequelize.define('Property', {
-  title: { type: DataTypes.STRING, allowNull: false },
-  description: { type: DataTypes.TEXT },
-  location: { type: DataTypes.STRING, allowNull: false },
-  type: { type: DataTypes.ENUM('Residential', 'Commercial', 'Land'), allowNull: false },
-  price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-  bedrooms: { type: DataTypes.INTEGER },
-  bathrooms: { type: DataTypes.INTEGER },
-  area: { type: DataTypes.DECIMAL(8, 2) },
-  image: { type: DataTypes.TEXT('long') },
-  status: { type: DataTypes.ENUM('Active', 'Sold', 'Pending'), defaultValue: 'Active' },
-  contactPhone: { type: DataTypes.STRING },
-  contactEmail: { type: DataTypes.STRING }
+const propertySchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String },
+  location: { type: String, required: true },
+  type: {
+    type: String,
+    enum: ['Residential', 'Commercial', 'Land'],
+    required: true
+  },
+  price: { type: Number, required: true },
+  bedrooms: { type: Number },
+  bathrooms: { type: Number },
+  area: { type: Number },
+  image: { type: String }, // You can use Buffer or base64 if needed for long-form images
+  status: {
+    type: String,
+    enum: ['Active', 'Sold', 'Pending'],
+    default: 'Active'
+  },
+  contactPhone: { type: String },
+  contactEmail: { type: String },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
 });
 
-module.exports = Property; 
+module.exports = mongoose.model('Property', propertySchema);
