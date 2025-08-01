@@ -72,6 +72,7 @@ function AdminRoute() {
   const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem('pesante_admin_logged_in') === 'yes');
   const handleLogin = () => setLoggedIn(true);
   const handleLogout = () => {
+    localStorage.removeItem('pesante_admin_token');
     localStorage.removeItem('pesante_admin_logged_in');
     setLoggedIn(false);
   };

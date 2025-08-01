@@ -24,9 +24,12 @@ export default function Login({ onLogin }) {
 
       const data = await res.json();
 
-      if (data.success) {
+      if (data.success && data.token) {
+        // ✅ Save both login state and JWT token securely
         localStorage.setItem('pesante_admin_logged_in', 'yes');
-        onLogin();
+        localStorage.setItem('pesante_admin_token', data.token); // 🛡️ Crucial line
+
+        onLogin(); // 🚪 Trigger route or UI change
       } else {
         setError('Invalid username or password');
       }

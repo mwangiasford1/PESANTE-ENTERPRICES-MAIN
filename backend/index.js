@@ -25,12 +25,12 @@ const whiteList = (process.env.FRONTEND_URLS || '')
   .map(origin => origin.trim());
 
 app.use(cors({
-  origin: function (origin, callback) {
-    console.log("🔍 CORS Origin:", origin);
+  origin: (origin, callback) => {
+    console.log('🔍 CORS Origin:', origin);
     if (!origin || whiteList.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("❌ Not allowed by CORS"));
+      callback(new Error('❌ Not allowed by CORS'));
     }
   },
   credentials: true
@@ -93,7 +93,6 @@ app.get('/api/envcheck', (req, res) => {
 // 🔐 Admin Login
 app.post('/api/admin/login', async (req, res) => {
   const { username, password } = req.body;
-
   console.log('🧪 Incoming:', username, password);
   console.log('🛠️ ENV credentials:', process.env.ADMIN_USERNAME, process.env.ADMIN_PASSWORD);
 
@@ -108,18 +107,34 @@ app.post('/api/admin/login', async (req, res) => {
   res.status(401).json({ success: false, error: 'Authentication failed', message: 'Invalid credentials' });
 });
 
-// 🔧 Data Routes (unchanged, abbreviated for clarity)
+// 🔧 Protected Data Routes
+
 app.get('/api/properties', async (req, res) => {
-  const data = await mongoose.model('Property').find().sort({ created_at: -1 });
+  const Property = mongoose.model('Property');
+  const data = await Property.find().sort({ created_at: -1 });
   res.json(data);
 });
+
 app.post('/api/properties', authenticateToken, validateRequired(['title', 'location', 'type', 'price']), async (req, res) => {
-  const property = new mongoose.model('Property')({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  const Property = mongoose.model('Property');
+  const property = new Property({ ...req.body, created_at: new Date(), updated_at: new Date() });
   await property.save();
   res.status(201).json({ success: true, id: property._id });
 });
 
-// ✅ Repeat for appointments & inquiries with same structure...
+app.post('/api/inquiries', authenticateToken, validateRequired(['name', 'email', 'message']), async (req, res) => {
+  const Inquiry = mongoose.model('Inquiry');
+  const inquiry = new Inquiry({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  await inquiry.save();
+  res.status(201).json({ success: true, id: inquiry._id });
+});
+
+app.post('/api/appointments', authenticateToken, validateRequired(['name', 'phone', 'property_id', 'date']), async (req, res) => {
+  const Appointment = mongoose.model('Appointment');
+  const appointment = new Appointment({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  await appointment.save();
+  res.status(201).json({ success: true, id: appointment._id });
+});
 
 // ❗ 404 & Error Fallbacks
 app.use('*', (req, res) => {
