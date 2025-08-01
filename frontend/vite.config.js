@@ -1,21 +1,22 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
 
 export default defineConfig({
   plugins: [react()],
 
-  // 🌐 Launch dev browser automatically
+  // 🌍 SPA Routing Support for Vercel
+  base: '/', // Ensures Vercel serves index.html for nested routes like /admin
+
   server: {
-    open: true, // 👉 This opens the browser when you run `npm run dev`
+    open: true, // 🚀 Automatically launches browser on `npm run dev`
     proxy: {
-      '/api': 'http://localhost:4000' // ✅ Local dev proxy for backend
+      '/api': 'http://localhost:4000' // 🔁 Local API proxy for backend integration
     }
   },
 
-  // ⚡ Optional Esbuild tweaks for better debugging (especially for SWC)
   esbuild: {
-    jsxDev: true,       // Improves source maps and console output for dev
-    logLevel: 'info'    // Shows build logs more clearly
+    jsxDev: true, // 🧩 Enhances source maps and debug output
+    logLevel: 'info' // 📝 Clear build logs
   },
 
   test: {
@@ -23,22 +24,24 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.js',
 
-    // ✅ Include all component test files
+    // 🧪 Include test files across the codebase
     include: ['**/*.{test,spec}.{js,jsx}'],
 
-    // 📈 Coverage settings
     coverage: {
-      reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'src/test/setup.js', 'src/test/setup.jsx'], // 👈 added `.jsx`
-      include: ['src/components/**/*.{js,jsx}'],
-      all: true,
+      reporter: ['text', 'json', 'html'], // 📊 Multiple formats for viewing coverage
+      exclude: [
+        'node_modules/',
+        'src/test/setup.js',
+        'src/test/setup.jsx' // 🗂 Exclude boilerplate setup files
+      ],
+      include: ['src/components/**/*.{js,jsx}'], // 🎯 Focus coverage on UI components
+      all: true, // ✅ Enforce coverage across matching files
       statements: 80,
       branches: 80,
       functions: 80,
       lines: 80
     },
 
-    // 🚫 Optional: enforce coverage thresholds during build/test runs
-    checkCoverage: true // ❗ blocks commit if thresholds aren’t met
+    checkCoverage: true // 🚨 Block commits if coverage drops below thresholds
   }
-})
+});
