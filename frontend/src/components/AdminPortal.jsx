@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import {
   getProperties, addProperty, updateProperty, deleteProperty,
   getAppointments, addAppointment, updateAppointment, deleteAppointment,
-  getInquiries, addInquiry, updateInquiry, deleteInquiry
+  getInquiries, addInquiry, updateInquiry, deleteInquiry,
+  changePassword
 } from '../api';
 
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
@@ -131,7 +132,7 @@ const AdminPortal = () => {
     }
   };
   const handleEdit = (prop) => {
-    setEditId(prop.id);
+    setEditId(prop._id);
     setListingTitle(prop.title);
     setListingPrice(prop.price);
     setListingStatus(prop.status);
@@ -153,7 +154,7 @@ const AdminPortal = () => {
   };
   const toggleStatus = async (id) => {
     try {
-      const prop = properties.find(l => l.id === id);
+      const prop = properties.find(l => l._id === id);
       await updateProperty(id, { ...prop, status: prop.status === 'Active' ? 'Inactive' : 'Active' });
       showToast('Status updated.');
       fetchProperties();
@@ -220,7 +221,7 @@ const AdminPortal = () => {
     }
   };
   const handleApptEdit = (appt) => {
-    setApptEditId(appt.id);
+    setApptEditId(appt._id);
     setApptName(appt.name);
     setApptDatetime(appt.datetime);
     showToast('Editing appointment...');
@@ -270,7 +271,7 @@ const AdminPortal = () => {
     }
   };
   const handleInqEdit = (inq) => {
-    setInqEditId(inq.id);
+    setInqEditId(inq._id);
     setInqName(inq.name);
     setInqMsg(inq.message);
     showToast('Editing inquiry...');
@@ -296,23 +297,14 @@ const AdminPortal = () => {
     e.preventDefault();
     setPwStatus('');
     try {
-      const res = await fetch('http://localhost:4000/api/admin/change-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'admin', oldPassword: pwOld, newPassword: pwNew })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setPwStatus('Password changed successfully!');
-        setShowChangePw(false);
-        setPwOld('');
-        setPwNew('');
-        showToast('Password changed!');
-      } else {
-        setPwStatus(data.error || 'Failed to change password.');
-      }
-    } catch {
-      setPwStatus('Failed to change password.');
+      await changePassword({ username: 'admin', oldPassword: pwOld, newPassword: pwNew });
+      setPwStatus('Password changed successfully!');
+      setShowChangePw(false);
+      setPwOld('');
+      setPwNew('');
+      showToast('Password changed!');
+    } catch (error) {
+      setPwStatus(error.response?.data?.error || 'Failed to change password.');
     }
   };
 
@@ -410,7 +402,7 @@ const AdminPortal = () => {
                     <td>{p.status}</td>
                     <td style={{display:'flex',gap:8}}>
                       <button onClick={()=>handleEdit(p)} style={{ background: '#b6a179', color: '#fff', border: 'none', borderRadius: 6, padding: '0.3rem 0.8rem', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer' }}>Edit</button>
-                      <button onClick={()=>deleteListing(p.id)} style={{ background: '#b60000', color: '#fff', border: 'none', borderRadius: 6, padding: '0.3rem 0.8rem', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer' }}>Delete</button>
+                      <button onClick={()=>deleteListing(p._id)} style={{ background: '#b60000', color: '#fff', border: 'none', borderRadius: 6, padding: '0.3rem 0.8rem', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer' }}>Delete</button>
                   </td>
                 </tr>
               ))}

@@ -30,6 +30,19 @@ PESANTE_ENTERPRICES/
     ├── vite.config.js     # Proxy config for backend API
     └── package.json       # Frontend dependencies
 ⚙️ Setup Instructions
+
+## 🚀 Quick Start
+
+### Option 1: Use the provided scripts
+```bash
+# Windows Batch
+start-servers.bat
+
+# PowerShell
+.\start-servers.ps1
+```
+
+### Option 2: Manual setup
 🧩 Prerequisites
 Node.js v16+
 
@@ -79,20 +92,48 @@ Run the development server:
 bash
 npm run dev
 📡 API Endpoints
-Method	Endpoint	Description
-GET	/api/properties	Fetch active property listings
-POST	/api/inquiries	Submit user inquiries
-POST	/api/appointments	Schedule viewings
-Additional routes available for admin actions and database management.
+
+### Public Routes (No Authentication Required)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check |
+| GET | `/api/properties` | Fetch active property listings |
+| POST | `/api/inquiries` | Submit user inquiries |
+| POST | `/api/appointments` | Schedule viewings |
+
+### Protected Routes (Admin Authentication Required)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/admin/login` | Admin authentication |
+| POST | `/api/admin/change-password` | Change admin password |
+| POST | `/api/properties` | Create new property |
+| PUT | `/api/properties/:id` | Update property |
+| DELETE | `/api/properties/:id` | Delete property |
+| GET | `/api/appointments` | Get all appointments |
+| PUT | `/api/appointments/:id` | Update appointment |
+| DELETE | `/api/appointments/:id` | Delete appointment |
+| GET | `/api/inquiries` | Get all inquiries |
+| PUT | `/api/inquiries/:id` | Update inquiry |
+| DELETE | `/api/inquiries/:id` | Delete inquiry |
 
 👨‍💻 Usage
-Visit http://localhost:5173
 
-Use Navbar to navigate: Home, Services, About, Contact, Properties, Appointment
+### 🌐 Frontend Routes
+- **Home** (`/`): Hero, Services, About, Contact sections
+- **Properties** (`/properties`): Property listings with filtering
+- **Appointment** (`/appointment`): Booking form for property viewings
+- **Admin Portal** (`/admin`): Protected admin interface
 
-Admin login portal at /admin (localStorage-based auth)
+### 🔐 Authentication
+- **Public Access**: Properties viewing, appointment booking, inquiry submission
+- **Admin Access**: Property management, appointment management, inquiry management
+- **Login**: Admin portal uses localStorage-based authentication
 
-Properties filter in real-time using Context API (PropertiesContext.jsx)
+### 🎯 Features
+- Real-time property filtering by location, price, and type
+- Responsive navigation with smooth scrolling
+- Admin portal with CRUD operations
+- MongoDB integration with proper ID handling
 
 👥 Contribution Guidelines
 Fork the repo and create a feature branch.

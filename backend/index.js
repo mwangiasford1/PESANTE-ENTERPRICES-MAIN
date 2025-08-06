@@ -15,9 +15,14 @@ const mongoose = require('mongoose');
 const config = require('./config')[process.env.NODE_ENV || 'development'];
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = 5000; // Force port 5000
+console.log('🔧 PORT from env:', process.env.PORT);
+console.log('🔧 Final PORT:', PORT);
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+// Simple password storage (in production, use a database)
+let currentAdminPassword = process.env.ADMIN_PASSWORD || 'pesante254';
 
 // ✅ Whitelisted Origins from ENV
 const whiteList = (process.env.FRONTEND_URLS || '')
@@ -94,17 +99,37 @@ app.get('/api/envcheck', (req, res) => {
 app.post('/api/admin/login', async (req, res) => {
   const { username, password } = req.body;
   console.log('🧪 Incoming:', username, password);
-  console.log('🛠️ ENV credentials:', process.env.ADMIN_USERNAME, process.env.ADMIN_PASSWORD);
+  console.log('🛠️ Current password:', currentAdminPassword);
 
   if (
     username === (process.env.ADMIN_USERNAME || 'admin') &&
-    password === (process.env.ADMIN_PASSWORD || 'pesante254')
+    password === currentAdminPassword
   ) {
     const token = jwt.sign({ username, role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
     return res.json({ success: true, message: 'Login successful', token, expiresIn: '24h' });
   }
 
   res.status(401).json({ success: false, error: 'Authentication failed', message: 'Invalid credentials' });
+});
+
+app.post('/api/admin/change-password', authenticateToken, async (req, res) => {
+  const { username, oldPassword, newPassword } = req.body;
+  
+  console.log('🔐 Change password attempt:', { username, oldPassword: '***', newPassword: '***' });
+  console.log('🔐 Current password:', currentAdminPassword);
+  
+  if (
+    username === (process.env.ADMIN_USERNAME || 'admin') &&
+    oldPassword === currentAdminPassword
+  ) {
+    // Update the stored password
+    currentAdminPassword = newPassword;
+    console.log('✅ Password changed successfully');
+    return res.json({ success: true, message: 'Password changed successfully' });
+  }
+
+  console.log('❌ Invalid current password');
+  res.status(401).json({ success: false, error: 'Invalid current password' });
 });
 
 // 🔧 Protected Data Routes
@@ -122,18 +147,120 @@ app.post('/api/properties', authenticateToken, validateRequired(['title', 'locat
   res.status(201).json({ success: true, id: property._id });
 });
 
-app.post('/api/inquiries', authenticateToken, validateRequired(['name', 'email', 'message']), async (req, res) => {
+app.put('/api/properties/:id', authenticateToken, validateRequired(['title', 'location', 'type', 'price']), async (req, res) => {
+  const Property = mongoose.model('Property');
+  try {
+    const property = await Property.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, updated_at: new Date() },
+      { new: true }
+    );
+    if (!property) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+    res.json({ success: true, property });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid property ID' });
+  }
+});
+
+app.delete('/api/properties/:id', authenticateToken, async (req, res) => {
+  const Property = mongoose.model('Property');
+  try {
+    const property = await Property.findByIdAndDelete(req.params.id);
+    if (!property) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+    res.json({ success: true, message: 'Property deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid property ID' });
+  }
+});
+
+app.post('/api/inquiries', validateRequired(['name', 'email', 'message']), async (req, res) => {
   const Inquiry = mongoose.model('Inquiry');
   const inquiry = new Inquiry({ ...req.body, created_at: new Date(), updated_at: new Date() });
   await inquiry.save();
   res.status(201).json({ success: true, id: inquiry._id });
 });
 
-app.post('/api/appointments', authenticateToken, validateRequired(['name', 'phone', 'property_id', 'date']), async (req, res) => {
+app.get('/api/inquiries', authenticateToken, async (req, res) => {
+  const Inquiry = mongoose.model('Inquiry');
+  const data = await Inquiry.find().sort({ created_at: -1 });
+  res.json(data);
+});
+
+app.put('/api/inquiries/:id', authenticateToken, validateRequired(['name', 'email', 'message']), async (req, res) => {
+  const Inquiry = mongoose.model('Inquiry');
+  try {
+    const inquiry = await Inquiry.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, updated_at: new Date() },
+      { new: true }
+    );
+    if (!inquiry) {
+      return res.status(404).json({ error: 'Inquiry not found' });
+    }
+    res.json({ success: true, inquiry });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid inquiry ID' });
+  }
+});
+
+app.delete('/api/inquiries/:id', authenticateToken, async (req, res) => {
+  const Inquiry = mongoose.model('Inquiry');
+  try {
+    const inquiry = await Inquiry.findByIdAndDelete(req.params.id);
+    if (!inquiry) {
+      return res.status(404).json({ error: 'Inquiry not found' });
+    }
+    res.json({ success: true, message: 'Inquiry deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid inquiry ID' });
+  }
+});
+
+app.post('/api/appointments', validateRequired(['name', 'phone', 'property_id', 'date']), async (req, res) => {
   const Appointment = mongoose.model('Appointment');
   const appointment = new Appointment({ ...req.body, created_at: new Date(), updated_at: new Date() });
   await appointment.save();
   res.status(201).json({ success: true, id: appointment._id });
+});
+
+app.get('/api/appointments', authenticateToken, async (req, res) => {
+  const Appointment = mongoose.model('Appointment');
+  const data = await Appointment.find().sort({ created_at: -1 });
+  res.json(data);
+});
+
+app.put('/api/appointments/:id', authenticateToken, validateRequired(['name', 'phone', 'property_id', 'date']), async (req, res) => {
+  const Appointment = mongoose.model('Appointment');
+  try {
+    const appointment = await Appointment.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, updated_at: new Date() },
+      { new: true }
+    );
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    res.json({ success: true, appointment });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid appointment ID' });
+  }
+});
+
+app.delete('/api/appointments/:id', authenticateToken, async (req, res) => {
+  const Appointment = mongoose.model('Appointment');
+  try {
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    res.json({ success: true, message: 'Appointment deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid appointment ID' });
+  }
 });
 
 // ❗ 404 & Error Fallbacks

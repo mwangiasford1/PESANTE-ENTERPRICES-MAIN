@@ -2,29 +2,30 @@ import pesanteLogo from '../assets/images/pesante-logo.jpg';
 import './Hero.css';
 import { useState, useEffect, useRef } from 'react';
 
-const COMPANY_NAME =          '  PESANTE ENTERPRICE';
+const COMPANY_NAME = '  PESANTE ENTERPRISES';
 
 const Hero = () => {
   const [displayed, setDisplayed] = useState('');
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
 
+  const animateText = () => {
+    let i = 0;
+    setDisplayed('');
+    intervalRef.current = setInterval(() => {
+      setDisplayed((prev) =>
+        i < COMPANY_NAME.length ? prev + COMPANY_NAME[i] : prev
+      );
+      i++;
+      if (i >= COMPANY_NAME.length) {
+        clearInterval(intervalRef.current);
+        timeoutRef.current = setTimeout(animateText, 10000);
+      }
+    }, 90);
+  };
+
   useEffect(() => {
-    function startAnimation() {
-      setDisplayed('');
-      let i = 0;
-      intervalRef.current = setInterval(() => {
-        setDisplayed((prev) =>
-          i < COMPANY_NAME.length ? prev + COMPANY_NAME[i] : prev
-        );
-        i++;
-        if (i >= COMPANY_NAME.length) {
-          clearInterval(intervalRef.current);
-          timeoutRef.current = setTimeout(startAnimation, 10000); // 10s delay
-        }
-      }, 90);
-    }
-    startAnimation();
+    animateText();
     return () => {
       clearInterval(intervalRef.current);
       clearTimeout(timeoutRef.current);
@@ -37,14 +38,7 @@ const Hero = () => {
         <img
           src={pesanteLogo}
           alt="Pesante Company Logo"
-          className="rotating-logo"
-          style={{
-            height: '150px',
-            marginBottom: '1rem',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            borderRadius: '50%',
-            padding: '16px',
-          }}
+          className="logo fade-in"
         />
         <h1 className="company-title">{displayed}</h1>
         <p className="tagline">Building Value. Managing Growth. Marketing Land.</p>
@@ -53,4 +47,4 @@ const Hero = () => {
   );
 };
 
-export default Hero; 
+export default Hero;

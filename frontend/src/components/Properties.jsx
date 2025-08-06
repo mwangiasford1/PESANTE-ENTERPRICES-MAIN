@@ -53,7 +53,7 @@ const Properties = () => {
           <div style={{ color: '#b6a179' }}>No properties found.</div>
         ) : (
           filtered.map((p) => (
-            <div className="property-card" key={p.id}>
+            <div className="property-card" key={p._id}>
               {p.image ? (
                 <img
                   src={p.image}

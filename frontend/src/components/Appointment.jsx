@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { addAppointment } from '../api';
 
 export default function Appointment() {
   const [status, setStatus] = useState('');
@@ -9,22 +10,14 @@ export default function Appointment() {
     const form = e.target;
     const data = {
       name: form[0].value,
-      email: form[1].value,
-      datetime: form[2].value,
-      message: form[3].value,
+      phone: form[1].value,
+      property_id: 'general',
+      date: form[2].value,
     };
     try {
-      const res = await fetch('http://localhost:4000/api/appointments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if (res.ok) {
-        setStatus('Appointment request sent! We will contact you soon.');
-        form.reset();
-      } else {
-        setStatus('Failed to send appointment. Please try again later.');
-      }
+      await addAppointment(data);
+      setStatus('Appointment request sent! We will contact you soon.');
+      form.reset();
     } catch {
       setStatus('Failed to send appointment. Please try again later.');
     }
@@ -35,9 +28,8 @@ export default function Appointment() {
       <h2>Book an Appointment</h2>
       <form className="appointment-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 350, width: '100%', margin: '0 auto 1.5rem auto' }}>
         <input type="text" placeholder="Your Name" required style={{ fontSize: '1rem', padding: '10px', borderRadius: 6, border: 'none' }} />
-        <input type="email" placeholder="Your Email" required style={{ fontSize: '1rem', padding: '10px', borderRadius: 6, border: 'none' }} />
+        <input type="tel" placeholder="Your Phone Number" required style={{ fontSize: '1rem', padding: '10px', borderRadius: 6, border: 'none' }} />
         <input type="datetime-local" required style={{ fontSize: '1rem', padding: '10px', borderRadius: 6, border: 'none' }} />
-        <textarea placeholder="Your Message" required style={{ fontSize: '1rem', padding: '10px', borderRadius: 6, border: 'none', resize: 'none' }}></textarea>
         <button type="submit" style={{ background: '#b6a179', color: '#fff', border: 'none', borderRadius: 6, padding: '10px 0', fontSize: '1rem', cursor: 'pointer', transition: 'background 0.2s' }}>Book Appointment</button>
       </form>
       {status && <div style={{ marginTop: 10, color: '#fff' }}>{status}</div>}

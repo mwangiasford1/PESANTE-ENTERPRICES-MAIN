@@ -28,3 +28,6 @@ export const getInquiries = () => axios.get(`${API_BASE}/inquiries`).then(r => r
 export const addInquiry = (data) => axios.post(`${API_BASE}/inquiries`, data).then(r => r.data);
 export const updateInquiry = (id, data) => axios.put(`${API_BASE}/inquiries/${id}`, data).then(r => r.data);
 export const deleteInquiry = (id) => axios.delete(`${API_BASE}/inquiries/${id}`).then(r => r.data);
+
+// --- 🔐 Admin ---
+export const changePassword = (data) => axios.post(`${API_BASE}/admin/change-password`, data).then(r => r.data);
