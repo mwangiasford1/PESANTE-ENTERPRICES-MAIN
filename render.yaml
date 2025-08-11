@@ -4,7 +4,11 @@ services:
     name: pesante-enterprices-main
     env: node
     plan: free
-    buildCommand: npm install --prefix backend && npm install --prefix frontend && VITE_API_URL=/api npm run build --prefix frontend
+    buildCommand: |
+      cd backend && npm install
+      cd ../frontend && npm install
+      VITE_API_URL=/api npm run build
+      cp -r dist ../backend/
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV

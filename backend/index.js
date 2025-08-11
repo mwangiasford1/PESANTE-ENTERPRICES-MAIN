@@ -266,7 +266,8 @@ app.delete('/api/appointments/:id', authenticateToken, async (req, res) => {
 
 // 🌐 Serve static files from frontend build
 if (process.env.NODE_ENV === 'production') {
-  const frontendPath = path.join(__dirname, '../frontend/dist');
+  const frontendPath = path.join(__dirname, 'dist');
+  console.log('Frontend path:', frontendPath);
   app.use(express.static(frontendPath));
   
   // 🔄 Fallback: serve React app for all non-API routes
