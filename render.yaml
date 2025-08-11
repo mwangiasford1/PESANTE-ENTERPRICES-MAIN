@@ -1,14 +1,10 @@
 services:
-  # Full-stack service (Backend + Frontend)
+  # Backend API only
   - type: web
-    name: pesante-enterprices-main
+    name: pesante-backend
     env: node
     plan: free
-    buildCommand: |
-      cd backend && npm install
-      cd ../frontend && npm install
-      VITE_API_URL=/api npm run build
-      cp -r dist ../backend/
+    buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
@@ -28,6 +24,6 @@ services:
       - key: CONTACT_EMAIL_PASS
         value: mwangi2024
       - key: FRONTEND_URLS
-        value: https://pesante-enterprices-main.vercel.app,https://pesante-frontend.onrender.com
+        value: https://pesante-enterprices-main.vercel.app,http://localhost:5174
 
  

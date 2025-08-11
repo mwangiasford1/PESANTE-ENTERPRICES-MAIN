@@ -264,28 +264,10 @@ app.delete('/api/appointments/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// 🌐 Serve static files from frontend build
-if (process.env.NODE_ENV === 'production') {
-  const frontendPath = path.join(__dirname, 'dist');
-  console.log('Frontend path:', frontendPath);
-  app.use(express.static(frontendPath));
-  
-  // 🔄 Fallback: serve React app for all non-API routes
-  app.get('*', (req, res) => {
-    if (!req.originalUrl.startsWith('/api')) {
-      const indexPath = path.join(frontendPath, 'index.html');
-      console.log('Serving frontend from:', indexPath);
-      res.sendFile(indexPath);
-    } else {
-      res.status(404).json({ error: 'API endpoint not found' });
-    }
-  });
-} else {
-  // ❗ 404 for development
-  app.use('*', (req, res) => {
-    res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
-  });
-}
+// ❗ 404 & Error Fallbacks
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
+});
 app.use((err, req, res, next) => {
   console.error('Unhandled Error:', err);
   res.status(500).json({ error: 'Server error', message: err.message });
