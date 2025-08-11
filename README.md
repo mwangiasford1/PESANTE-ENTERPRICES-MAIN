@@ -1,24 +1,48 @@
+# PESANTE ENTERPRISES
+
 PESANTE ENTERPRISES is a full-stack real estate application designed to showcase and manage property listings, handle inquiries and appointments, and provide an admin portal for backend operations. Built with modern technologies including React (Vite), Node.js/Express, and MongoDB Atlas, the app supports real-time filtering and secure admin access.
 
-🌟 Features
-🔎 Dynamic property listings with real-time filtering by location, price, and type
+## 🌐 Live Application
 
-🗓️ Appointment scheduling and contact form integration
+**Frontend**: https://pesante-enterprices-main-1.onrender.com
+**Backend API**: https://pesante-enterprices-main.onrender.com/api
+**Admin Portal**: https://pesante-enterprices-main-1.onrender.com/admin
 
-📬 Inquiry submission via RESTful API
+**Admin Credentials:**
+- Username: `admin`
+- Password: `pesante254`
 
-🔐 Admin portal with login/logout and local state management
+## 🌟 Enhanced Features
 
-📦 MongoDB Atlas integration via Axios and Context API
+### 🗓️ Advanced Appointment Management
+- Complete form fields: Client name, phone, property selection, date/time
+- Status management: Pending, Confirmed, Cancelled with color-coded badges
+- Professional table display with property linking
+- Full CRUD operations with proper validation
 
-🎯 Scrollable sections with navigation via React Router
+### 🏠 Property Management
+- Dynamic property listings with real-time filtering by location, price, and type
+- Image upload and preview functionality
+- Status toggle (Active/Inactive/Sold/Pending)
+- Comprehensive property details management
 
-🗂️ Project Structure
+### 📬 Inquiry System
+- Contact form integration
+- Admin dashboard for inquiry management
+- RESTful API submission
+
+### 🔐 Security & Authentication
+- JWT-based authentication with 24-hour expiration
+- Protected admin routes
+- CORS configuration for production
+- Environment-based configuration
+
+## 🗂️ Project Structure
+```
 PESANTE_ENTERPRICES/
 ├── backend/               # Node.js/Express backend
 │   ├── models/            # Mongoose models (Property, Inquiry, Appointment)
-│   ├── routes/            # API route handlers
-│   ├── .env               # MongoDB URI and config
+│   ├── .env               # MongoDB Atlas URI and config
 │   ├── index.js           # Entry point of backend server
 │   └── package.json       # Backend dependencies
 └── frontend/              # React (Vite) frontend
@@ -29,69 +53,48 @@ PESANTE_ENTERPRICES/
     ├── public/            # Static assets
     ├── vite.config.js     # Proxy config for backend API
     └── package.json       # Frontend dependencies
-⚙️ Setup Instructions
-
-## 🚀 Quick Start
-
-### Option 1: Use the provided scripts
-```bash
-# Windows Batch
-start-servers.bat
-
-# PowerShell
-.\start-servers.ps1
 ```
 
-### Option 2: Manual setup
-🧩 Prerequisites
-Node.js v16+
+## 🚀 Local Development Setup
 
-npm v8+
-
-MongoDB Atlas account and cluster setup
-
-🔙 Backend Setup
-Navigate to the backend directory:
-
-bash
+### Backend Setup
+```bash
 cd backend
-Install dependencies:
-
-bash
 npm install
-Create a .env file and configure:
+```
 
-env
-MONGO_URI=your_mongodb_atlas_connection_string
-PORT=5000
-Start the server:
+Create `.env` file:
+```env
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/pesante_db
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=pesante254
+JWT_SECRET=your_jwt_secret
+PORT=3001
+FRONTEND_URLS=http://localhost:5174
+```
 
-bash
+Start server:
+```bash
 node index.js
-🎨 Frontend Setup
-Navigate to the frontend:
+```
 
-bash
+### Frontend Setup
+```bash
 cd frontend
-Install dependencies:
-
-bash
 npm install
-Configure Vite proxy (vite.config.js):
+```
 
-js
-export default {
-  server: {
-    proxy: {
-      '/api': 'http://localhost:5000'
-    }
-  }
-}
-Run the development server:
+Create `.env` file:
+```env
+VITE_API_URL=http://localhost:3001/api
+```
 
-bash
+Start development server:
+```bash
 npm run dev
-📡 API Endpoints
+```
+
+## 📡 API Endpoints
 
 ### Public Routes (No Authentication Required)
 | Method | Endpoint | Description |
@@ -116,33 +119,40 @@ npm run dev
 | PUT | `/api/inquiries/:id` | Update inquiry |
 | DELETE | `/api/inquiries/:id` | Delete inquiry |
 
-👨‍💻 Usage
+## 🚀 Deployment
 
-### 🌐 Frontend Routes
-- **Home** (`/`): Hero, Services, About, Contact sections
-- **Properties** (`/properties`): Property listings with filtering
-- **Appointment** (`/appointment`): Booking form for property viewings
-- **Admin Portal** (`/admin`): Protected admin interface
+The application is deployed on Render with the following configuration:
 
-### 🔐 Authentication
-- **Public Access**: Properties viewing, appointment booking, inquiry submission
-- **Admin Access**: Property management, appointment management, inquiry management
-- **Login**: Admin portal uses localStorage-based authentication
+### Backend (Node.js Service)
+- **URL**: https://pesante-enterprices-main.onrender.com
+- **Environment**: Production
+- **Database**: MongoDB Atlas
+- **CORS**: Configured for frontend domain
 
-### 🎯 Features
-- Real-time property filtering by location, price, and type
-- Responsive navigation with smooth scrolling
-- Admin portal with CRUD operations
-- MongoDB integration with proper ID handling
+### Frontend (Static Site)
+- **URL**: https://pesante-enterprices-main-1.onrender.com
+- **Build**: Vite production build
+- **API Integration**: Points to backend service
 
-👥 Contribution Guidelines
-Fork the repo and create a feature branch.
+## 🛠️ Technology Stack
 
-Write clear, testable code (consider ESLint/Prettier setup).
+**Frontend:**
+- React 18 with Vite
+- React Router for navigation
+- Axios for API calls
+- Context API for state management
 
-Submit a pull request with details and screenshots if applicable.
+**Backend:**
+- Node.js with Express
+- MongoDB Atlas (Cloud Database)
+- JWT for authentication
+- CORS for cross-origin requests
+- Helmet for security headers
 
-Collaborate via Issues and Pull Requests.
+**Deployment:**
+- Render (Both frontend and backend)
+- Environment-based configuration
+- Production-ready setup
 
-📄 License
-Licensed under the ISC License. See LICENSE for terms.
+## 📄 License
+Licensed under the ISC License.
