@@ -31,14 +31,7 @@ const whiteList = (process.env.FRONTEND_URLS || '')
   .map(origin => origin.trim());
 
 app.use(cors({
-  origin: (origin, callback) => {
-    console.log('🔍 CORS Origin:', origin);
-    if (!origin || whiteList.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('❌ Not allowed by CORS'));
-    }
-  },
+  origin: true,
   credentials: true
 }));
 
