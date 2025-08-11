@@ -22,7 +22,7 @@ services:
       - key: CONTACT_EMAIL_PASS
         value: mwangi2024
       - key: FRONTEND_URLS
-        value: https://pesante-frontend.onrender.com,http://localhost:5174
+        value: https://pesante-enterprices-main-1.onrender.com,http://localhost:5174
 
   # Frontend
   - type: web
