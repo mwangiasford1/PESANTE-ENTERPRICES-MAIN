@@ -1,5 +1,5 @@
 services:
-  # Backend API only
+  # Backend API
   - type: web
     name: pesante-backend
     env: node
@@ -17,13 +17,20 @@ services:
         value: pesante254
       - key: JWT_SECRET
         value: pesanteSuperSecretKey
-      - key: PORT
-        value: 3001
       - key: CONTACT_EMAIL
         value: mwangiasford12@gmail.com
       - key: CONTACT_EMAIL_PASS
         value: mwangi2024
       - key: FRONTEND_URLS
-        value: https://pesante-enterprices-main.vercel.app,http://localhost:5174
+        value: https://pesante-frontend.onrender.com,http://localhost:5174
 
- 
+  # Frontend
+  - type: web
+    name: pesante-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://pesante-backend.onrender.com/api
