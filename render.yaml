@@ -9,20 +9,22 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DB_HOST
-        sync: false
-      - key: DB_USER
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: DB_NAME
-        sync: false
-      - key: DB_PORT
-        value: 3306
+      - key: MONGO_URI
+        value: mongodb+srv://pesante_admin:Asford254@project.ju5j3qr.mongodb.net/pesante_db?retryWrites=true&w=majority
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: pesante254
+      - key: JWT_SECRET
+        value: pesanteSuperSecretKey
+      - key: PORT
+        value: 3001
       - key: CONTACT_EMAIL
-        sync: false
+        value: mwangiasford12@gmail.com
       - key: CONTACT_EMAIL_PASS
-        sync: false
+        value: mwangi2024
+      - key: FRONTEND_URLS
+        value: https://pesante-enterprices-main.vercel.app,https://pesante-frontend.onrender.com
 
   # Frontend Service
   - type: web
@@ -33,9 +35,4 @@ services:
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
-        value: https://pesante-backend.onrender.com
-
-databases:
-  - name: pesante-db
-    databaseName: pesante_db
-    user: pesante_user 
+        value: https://pesante-backend.onrender.com/api 
