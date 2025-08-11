@@ -15,7 +15,7 @@ const mongoose = require('mongoose');
 const config = require('./config')[process.env.NODE_ENV || 'development'];
 
 const app = express();
-const PORT = 5000; // Force port 5000
+const PORT = process.env.PORT || 4000;
 console.log('🔧 PORT from env:', process.env.PORT);
 console.log('🔧 Final PORT:', PORT);
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';

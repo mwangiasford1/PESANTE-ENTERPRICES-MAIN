@@ -50,7 +50,10 @@ const AdminPortal = () => {
   const [appointmentsLoading, setAppointmentsLoading] = useState(true);
   const [appointmentsError, setAppointmentsError] = useState('');
   const [apptName, setApptName] = useState('');
-  const [apptDatetime, setApptDatetime] = useState('');
+  const [apptPhone, setApptPhone] = useState('');
+  const [apptPropertyId, setApptPropertyId] = useState('');
+  const [apptDate, setApptDate] = useState('');
+  const [apptStatus, setApptStatus] = useState('pending');
   const [apptEditId, setApptEditId] = useState(null);
 
   // --- Inquiries ---
@@ -202,16 +205,23 @@ const AdminPortal = () => {
   };
   const handleApptSubmit = async (e) => {
     e.preventDefault();
-    if (!apptName || !apptDatetime) {
+    if (!apptName || !apptPhone || !apptPropertyId || !apptDate) {
       showToast('Please fill in all appointment fields.');
       return;
     }
     try {
+      const appointmentData = {
+        name: apptName,
+        phone: apptPhone,
+        property_id: apptPropertyId,
+        date: apptDate,
+        status: apptStatus
+      };
       if (apptEditId) {
-        await updateAppointment(apptEditId, { name: apptName, datetime: apptDatetime });
+        await updateAppointment(apptEditId, appointmentData);
         showToast('Appointment updated!');
       } else {
-        await addAppointment({ name: apptName, datetime: apptDatetime });
+        await addAppointment(appointmentData);
         showToast('Appointment added!');
       }
       fetchAppointments();
@@ -223,7 +233,10 @@ const AdminPortal = () => {
   const handleApptEdit = (appt) => {
     setApptEditId(appt._id);
     setApptName(appt.name);
-    setApptDatetime(appt.datetime);
+    setApptPhone(appt.phone);
+    setApptPropertyId(appt.property_id);
+    setApptDate(appt.date);
+    setApptStatus(appt.status || 'pending');
     showToast('Editing appointment...');
   };
   const deleteAppointmentHandler = async (id) => {
@@ -239,7 +252,10 @@ const AdminPortal = () => {
   const resetApptForm = () => {
     setApptEditId(null);
     setApptName('');
-    setApptDatetime('');
+    setApptPhone('');
+    setApptPropertyId('');
+    setApptDate('');
+    setApptStatus('pending');
   };
 
   // --- Inquiries CRUD ---
@@ -394,7 +410,7 @@ const AdminPortal = () => {
             </thead>
             <tbody>
                 {properties.map((p) => (
-                  <tr key={p.id}>
+                  <tr key={p._id}>
                     <td>{p.title}</td>
                     <td>{p.price}</td>
                     <td>{p.location}</td>
@@ -414,30 +430,72 @@ const AdminPortal = () => {
       {activeTab === 'appointments' && (
         <div style={{ marginBottom: 40 }}>
           <h3 style={{ color: '#b6a179', marginBottom: 18 }}>Manage Appointments</h3>
-        <form className="admin-form" onSubmit={handleApptSubmit} style={{marginBottom:'1rem',display:'flex',gap:'0.5rem',flexWrap:'wrap',justifyContent:'center'}}>
-          <input value={apptName} onChange={e=>setApptName(e.target.value)} placeholder="Name" required />
-          <input value={apptDatetime} onChange={e=>setApptDatetime(e.target.value)} placeholder="Date & Time" required />
-          <button type="submit">{apptEditId ? 'Update' : 'Add'} Appointment</button>
-          {apptEditId && <button type="button" onClick={resetApptForm} style={{background:'#e9e4d5',color:'#3e2c18'}}>Cancel</button>}
-        </form>
-        {appointmentsLoading ? (
-          <div>Loading appointments...</div>
-        ) : appointmentsError ? (
-          <div style={{color:'#c0392b'}}>{appointmentsError}</div>
-        ) : (
-          <ul>
-            {appointments.map(a => (
-              <li key={a.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'1rem'}}>
-                <span>{a.name} - {a.datetime}</span>
-                <span style={{display:'flex',gap:'0.5rem'}}>
-                  <button onClick={() => handleApptEdit(a)} style={{background:'#7c9a6d',color:'#fff',border:'none',borderRadius:'5px',padding:'2px 8px',cursor:'pointer'}}>Edit</button>
-                  <button onClick={() => deleteAppointmentHandler(a.id)} style={{background:'#c0392b',color:'#fff',border:'none',borderRadius:'5px',padding:'2px 8px',cursor:'pointer'}}>Delete</button>
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+          <form className="admin-form" onSubmit={handleApptSubmit} style={{marginBottom:'1rem',display:'flex',gap:'0.5rem',flexWrap:'wrap',justifyContent:'center'}}>
+            <input value={apptName} onChange={e=>setApptName(e.target.value)} placeholder="Client Name" required />
+            <input value={apptPhone} onChange={e=>setApptPhone(e.target.value)} placeholder="Phone Number" required />
+            <select value={apptPropertyId} onChange={e=>setApptPropertyId(e.target.value)} required>
+              <option value="">Select Property</option>
+              {properties.map(p => (
+                <option key={p._id} value={p._id}>{p.title} - {p.location}</option>
+              ))}
+            </select>
+            <input value={apptDate} onChange={e=>setApptDate(e.target.value)} type="datetime-local" required />
+            <select value={apptStatus} onChange={e=>setApptStatus(e.target.value)}>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button type="submit" style={{ background: '#7c9a6d', color: '#fff', border: 'none', borderRadius: 6, padding: '0.5rem 1.2rem', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }}>{apptEditId ? 'Update' : 'Add'}</button>
+            {apptEditId && <button type="button" onClick={resetApptForm} style={{ background: '#e9e4d5', color: '#7c9a6d', border: 'none', borderRadius: 6, padding: '0.5rem 1.2rem', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }}>Cancel</button>}
+          </form>
+          {appointmentsLoading ? (
+            <div>Loading appointments...</div>
+          ) : appointmentsError ? (
+            <div style={{color:'#b60000'}}>{appointmentsError}</div>
+          ) : (
+            <table className="admin-table" style={{marginTop:18}}>
+              <thead>
+                <tr>
+                  <th>Client Name</th>
+                  <th>Phone</th>
+                  <th>Property</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {appointments.map((a) => {
+                  const property = properties.find(p => p._id === a.property_id);
+                  return (
+                    <tr key={a._id}>
+                      <td>{a.name}</td>
+                      <td>{a.phone}</td>
+                      <td>{property ? `${property.title} - ${property.location}` : 'Property not found'}</td>
+                      <td>{new Date(a.date).toLocaleString()}</td>
+                      <td>
+                        <span style={{
+                          padding: '0.2rem 0.5rem',
+                          borderRadius: 4,
+                          fontSize: '0.85rem',
+                          fontWeight: 600,
+                          background: a.status === 'confirmed' ? '#d4edda' : a.status === 'cancelled' ? '#f8d7da' : '#fff3cd',
+                          color: a.status === 'confirmed' ? '#155724' : a.status === 'cancelled' ? '#721c24' : '#856404'
+                        }}>
+                          {a.status?.toUpperCase() || 'PENDING'}
+                        </span>
+                      </td>
+                      <td style={{display:'flex',gap:8}}>
+                        <button onClick={()=>handleApptEdit(a)} style={{ background: '#b6a179', color: '#fff', border: 'none', borderRadius: 6, padding: '0.3rem 0.8rem', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer' }}>Edit</button>
+                        <button onClick={()=>deleteAppointmentHandler(a._id)} style={{ background: '#b60000', color: '#fff', border: 'none', borderRadius: 6, padding: '0.3rem 0.8rem', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer' }}>Delete</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
       )}
       {activeTab === 'inquiries' && (
         <div style={{ marginBottom: 40 }}>

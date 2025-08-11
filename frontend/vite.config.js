@@ -11,7 +11,7 @@ export default defineConfig({
     open: true, // 🚀 Automatically opens browser on dev start
     port: 5174, // Use port 5174 since 5173 is in use
     proxy: {
-      '/api': 'http://localhost:5000' // 🔁 Local backend proxy for API routes
+      '/api': 'http://localhost:3001' // 🔁 Local backend proxy for API routes
     }
   },
 
