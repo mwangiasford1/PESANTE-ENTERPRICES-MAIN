@@ -30,4 +30,5 @@ export const updateInquiry = (id, data) => axios.put(`${API_BASE}/inquiries/${id
 export const deleteInquiry = (id) => axios.delete(`${API_BASE}/inquiries/${id}`).then(r => r.data);
 
 // --- 🔐 Admin ---
+export const adminLogin = (data) => axios.post(`${API_BASE}/admin/login`, data).then(r => r.data);
 export const changePassword = (data) => axios.post(`${API_BASE}/admin/change-password`, data).then(r => r.data);
