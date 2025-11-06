@@ -25,6 +25,7 @@ import Footer from './components/Footer';
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const isAdminLoggedIn = localStorage.getItem('pesante_admin_logged_in') === 'yes';
 
   const handleNav = (section) => {
     setOpen(false);
@@ -46,7 +47,9 @@ const Navbar = () => {
         <li><Link className="nav-btn" to="/properties" onClick={() => setOpen(false)}>Properties</Link></li>
         <li><Link className="nav-btn" to="/appointment" onClick={() => setOpen(false)}>Appointment</Link></li>
         <li><Link className="nav-btn" to="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link></li>
-        <li><Link className="nav-btn" to="/admin" onClick={() => setOpen(false)}>Admin Portal</Link></li>
+        {isAdminLoggedIn && (
+          <li><Link className="nav-btn" to="/admin" onClick={() => setOpen(false)}>Admin Portal</Link></li>
+        )}
       </ul>
     </nav>
   );
