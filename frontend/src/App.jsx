@@ -1,6 +1,6 @@
 // App.jsx
 import './App.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,10 +22,13 @@ import { PropertiesProvider } from './components/PropertiesContext';
 import Login from './components/Login';
 import Footer from './components/Footer';
 
+// Create Auth Context
+const AuthContext = createContext();
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const isAdminLoggedIn = localStorage.getItem('pesante_admin_logged_in') === 'yes';
+  const { isAdminLoggedIn } = useContext(AuthContext);
 
   const handleNav = (section) => {
     setOpen(false);
@@ -79,22 +82,20 @@ const Home = () => {
 };
 
 const AdminRoute = () => {
-  const [loggedIn, setLoggedIn] = useState(() =>
-    localStorage.getItem('pesante_admin_logged_in') === 'yes'
-  );
+  const { isAdminLoggedIn, setIsAdminLoggedIn } = useContext(AuthContext);
 
   const handleLogin = () => {
     localStorage.setItem('pesante_admin_logged_in', 'yes');
-    setLoggedIn(true);
+    setIsAdminLoggedIn(true);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('pesante_admin_token');
     localStorage.removeItem('pesante_admin_logged_in');
-    setLoggedIn(false);
+    setIsAdminLoggedIn(false);
   };
 
-  return !loggedIn ? (
+  return !isAdminLoggedIn ? (
     <Login onLogin={handleLogin} />
   ) : (
     <div style={{ position: 'relative' }}>
@@ -121,24 +122,30 @@ const AdminRoute = () => {
 };
 
 function App() {
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() =>
+    localStorage.getItem('pesante_admin_logged_in') === 'yes'
+  );
+
   return (
-    <div className="pesante-root">
-      <PropertiesProvider>
-        <Router>
-          <Navbar />
-          <div className="main-content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/properties" element={<Properties />} />
-              <Route path="/appointment" element={<Appointment />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/admin" element={<AdminRoute />} />
-            </Routes>
-          </div>
-          <Footer />
-        </Router>
-      </PropertiesProvider>
-    </div>
+    <AuthContext.Provider value={{ isAdminLoggedIn, setIsAdminLoggedIn }}>
+      <div className="pesante-root">
+        <PropertiesProvider>
+          <Router>
+            <Navbar />
+            <div className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/properties" element={<Properties />} />
+                <Route path="/appointment" element={<Appointment />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/admin" element={<AdminRoute />} />
+              </Routes>
+            </div>
+            <Footer />
+          </Router>
+        </PropertiesProvider>
+      </div>
+    </AuthContext.Provider>
   );
 }
 
