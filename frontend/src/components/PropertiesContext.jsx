@@ -5,13 +5,13 @@ const PropertiesContext = createContext();
 
 export const PropertiesProvider = ({ children }) => {
   const [properties, setProperties] = useState([]);
-  const [error, setError] = useState(null); // 🔴 Add error state
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     api.getProperties()
       .then(data => {
         setProperties(data);
-        setError(null); // clear error if successful
+        setError(null);
       })
       .catch(err => {
         console.error('API error:', err);

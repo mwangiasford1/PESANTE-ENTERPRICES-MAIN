@@ -3,8 +3,9 @@ import './Footer.css';
 
 const Footer = () => (
   <footer className="footer">
-    <div>
-      &copy; {new Date().getFullYear()} Pesante ENTERPRISES. All rights reserved.
+    <div className="footer-content">
+      <p>&copy; {new Date().getFullYear()} Pesante Enterprises. All rights reserved.</p>
+      <p>Building Value. Managing Growth. Marketing Land.</p>
     </div>
   </footer>
 );

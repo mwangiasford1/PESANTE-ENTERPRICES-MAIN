@@ -1,15 +1,40 @@
 .footer {
-  background: #222;
+  background: #3e2c18;
   color: #fff;
   text-align: center;
-  padding: 1rem 0;
+  padding: 2rem 1rem;
   width: 100%;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-content p {
+  margin: 0.5rem 0;
   font-size: 1rem;
+}
+
+.footer-content p:first-child {
+  font-weight: 600;
+}
+
+.footer-content p:last-child {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-style: italic;
 }
 
 @media (max-width: 600px) {
   .footer {
+    padding: 1.5rem 1rem;
+  }
+  .footer-content p {
     font-size: 0.9rem;
-    padding: 0.7rem 0;
+  }
+  .footer-content p:last-child {
+    font-size: 0.8rem;
   }
 } 

@@ -2,10 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 70vh;
   flex-direction: column;
-  background: linear-gradient(to bottom right, #f5f5f5, #e0e0e0);
+  background: linear-gradient(120deg, #b6a179 60%, #7c9a6d 100%);
+  color: #fff;
   text-align: center;
+  padding: 64px 20px 48px 20px;
 }
 
 .hero-content {
@@ -13,38 +15,38 @@
 }
 
 .company-title {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   margin-bottom: 0.5rem;
-  color: #7c9a6d;
+  letter-spacing: 2px;
+  color: #fff;
 }
 
 .tagline {
-  font-size: 1.2rem;
-  color: #444;
-  font-weight: 500;
-  margin-top: 0.5rem;
-  letter-spacing: 0.5px;
+  font-size: 1.3rem;
+  font-style: italic;
+  opacity: 0.95;
+  color: #fff;
 }
 
 .logo {
-  transform: scale(2); /* Enlarges to 200% */
-  opacity: 0;
   display: block;
-  margin: 100px auto;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin: 0 auto 2rem auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   max-width: 120px;
   width: 100%;
   height: auto;
   border-radius: 50%;
-  padding: 16px;
+  opacity: 1;
 }
 
-.fade-in {
-  animation: fadeInLogo 2s ease-in-out forwards;
-}
-
-@keyframes fadeInLogo {
-  to {
-    opacity: 1;
+@media (max-width: 768px) {
+  .company-title {
+    font-size: 2.2rem;
+  }
+  .tagline {
+    font-size: 1.1rem;
+  }
+  .logo {
+    max-width: 100px;
   }
 }

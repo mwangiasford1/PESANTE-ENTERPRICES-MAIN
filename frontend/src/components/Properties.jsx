@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProperties } from './PropertiesContext';
 
 const Properties = () => {
-  const { properties, error } = useProperties(); // 🧠 error now available
+  const { properties, error } = useProperties();
   const [location, setLocation] = useState('');
   const [price, setPrice] = useState('');
   const [type, setType] = useState('');
@@ -19,7 +19,6 @@ const Properties = () => {
     <section className="properties-page">
       <h2>Properties</h2>
 
-      {/* 🛑 Error UI */}
       {error && (
         <div style={{ color: 'red', marginBottom: '1rem' }}>
           Error: {error}

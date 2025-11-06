@@ -121,12 +121,14 @@ function App() {
       <PropertiesProvider>
         <Router>
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/properties" element={<Properties />} />
-            <Route path="/appointment" element={<Appointment />} />
-            <Route path="/admin" element={<AdminRoute />} />
-          </Routes>
+          <div className="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/properties" element={<Properties />} />
+              <Route path="/appointment" element={<Appointment />} />
+              <Route path="/admin" element={<AdminRoute />} />
+            </Routes>
+          </div>
           <Footer />
         </Router>
       </PropertiesProvider>

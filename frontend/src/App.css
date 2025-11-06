@@ -1,5 +1,5 @@
-html, body, #root, .pesante-root {
-  width: 100vw;
+html, body, #root {
+  width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -13,50 +13,24 @@ html, body, #root, .pesante-root {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.pesante-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main-content {
+  flex: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
 
 /* Pesante Enterprise Landing Page Styles */
 .pesante-root {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #f7f5ef;
   color: #3e2c18;
-  min-height: 100vh;
-  width: 100vw;
 }
 
 /* Section styles: make them full width */
@@ -66,31 +40,19 @@ html, body, #root, .pesante-root {
 .contact,
 .properties-page,
 .admin-section {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  width: 100%;
   box-sizing: border-box;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-/* Adjust padding for comfort */
-.hero,
-.services,
-.about,
-.contact {
   padding-left: 24px;
   padding-right: 24px;
 }
 
-/* Remove horizontal scroll caused by 100vw on body */
+/* Remove horizontal scroll */
 body {
   overflow-x: hidden;
 }
 
 .navbar {
   background: #fff;
-  
   padding: 1rem 0.5rem;
   display: flex;
   justify-content: center;
@@ -98,6 +60,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .navbar ul {
   display: flex;
@@ -134,9 +97,9 @@ body {
     position: absolute;
     top: 60px;
     left: 0;
-    width: 100vw;
+    width: 100%;
     padding: 1rem 0;
-    box-shadow: 0 2px 8px rgba(255, 254, 254, 0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
   .navbar ul.open {
     display: flex;
@@ -146,22 +109,7 @@ body {
   }
 }
 
-.hero {
-  background: linear-gradient(120deg, #b6a179 60%, #7c9a6d 100%);
-  color: #fff;
-  padding: 64px 20px 48px 20px;
-  text-align: center;
-}
-.hero-content h1 {
-  font-size: 2.8rem;
-  margin-bottom: 0.5rem;
-  letter-spacing: 2px;
-}
-.tagline {
-  font-size: 1.3rem;
-  font-style: italic;
-  opacity: 0.95;
-}
+
 
 .services {
   background: #e9e4d5;
@@ -187,6 +135,12 @@ body {
   max-width: 300px;
   flex: 1 1 220px;
   margin-bottom: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(60, 40, 20, 0.12);
 }
 .service-card h3 {
   color: #7c9a6d;
@@ -196,6 +150,11 @@ body {
   list-style: disc inside;
   text-align: left;
   color: #3e2c18;
+  padding-left: 0;
+}
+
+.service-card li {
+  margin-bottom: 0.3rem;
 }
 
 .about {
@@ -244,6 +203,8 @@ body {
 }
 .contact-form button:hover {
   background: #a18c5b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 .contact-info p {
   margin: 0.2rem 0;
@@ -291,6 +252,12 @@ body {
   flex: 1 1 220px;
   margin-bottom: 16px;
   text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.property-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(60, 40, 20, 0.12);
 }
 .property-card h3 {
   color: #7c9a6d;
@@ -299,7 +266,20 @@ body {
 
 /* Admin Portal Styles */
 .admin-section {
-  margin: 2.5rem 0;
+  padding: 2.5rem 1rem;
+  min-height: 60vh;
+}
+
+.properties-page {
+  padding: 2.5rem 1rem;
+  min-height: 60vh;
+}
+
+.properties-page h2 {
+  color: #7c9a6d;
+  margin-bottom: 2rem;
+  font-size: 2.2rem;
+  text-align: center;
 }
 .admin-table {
   width: 100%;
@@ -329,6 +309,14 @@ body {
   max-width: 500px;
   color: #3e2c18;
   padding-left: 1.2rem;
+}
+
+.admin-section li {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: #f7f5ef;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
 }
 
 .admin-portal {
@@ -381,6 +369,8 @@ body {
   color: #b6a179;
   border-color: #b6a179;
   background: #f7f5ef;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 @media (max-width: 900px) {
@@ -393,5 +383,19 @@ body {
   }
   .admin-portal {
     padding: 1.2rem 0.5rem;
+    margin: 1rem;
+  }
+  .properties-grid {
+    gap: 1rem;
+  }
+  .filter-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .filter-bar input,
+  .filter-bar select {
+    width: 100%;
+    max-width: 300px;
   }
 }

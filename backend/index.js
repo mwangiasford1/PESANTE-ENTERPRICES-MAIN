@@ -1,7 +1,7 @@
-// ✅ Load ENV First!
+// Load ENV First
 require('dotenv').config();
 
-// 📦 Import Models
+// Import Models
 require('./models/Property');
 require('./models/Inquiry');
 require('./models/Appointment');
@@ -17,15 +17,15 @@ const config = require('./config')[process.env.NODE_ENV || 'development'];
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-console.log('🔧 PORT from env:', process.env.PORT);
-console.log('🔧 Final PORT:', PORT);
+console.log('PORT from env:', process.env.PORT);
+console.log('Final PORT:', PORT);
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Simple password storage (in production, use a database)
 let currentAdminPassword = process.env.ADMIN_PASSWORD || 'pesante254';
 
-// ✅ Whitelisted Origins from ENV
+// Whitelisted Origins from ENV
 const whiteList = (process.env.FRONTEND_URLS || '')
   .split(',')
   .map(origin => origin.trim());
@@ -35,7 +35,7 @@ app.use(cors({
   credentials: true
 }));
 
-// 🔐 Security & Middleware
+// Security & Middleware
 app.use(helmet());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -49,7 +49,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 🔐 JWT Middleware
+// JWT Middleware
 const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Token required' });
@@ -61,7 +61,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// 📏 Field Validator
+// Field Validator
 const validateRequired = (fields) => (req, res, next) => {
   const missing = fields.filter(field => !req.body[field]);
   if (missing.length) {
@@ -70,7 +70,7 @@ const validateRequired = (fields) => (req, res, next) => {
   next();
 };
 
-// 🩺 Health Route
+// Health Route
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
@@ -81,7 +81,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 🧪 ENV Debug Route
+// ENV Debug Route
 app.get('/api/envcheck', (req, res) => {
   res.json({
     ADMIN_USERNAME: process.env.ADMIN_USERNAME,
@@ -89,11 +89,11 @@ app.get('/api/envcheck', (req, res) => {
   });
 });
 
-// 🔐 Admin Login
+// Admin Login
 app.post('/api/admin/login', async (req, res) => {
   const { username, password } = req.body;
-  console.log('🧪 Incoming:', username, password);
-  console.log('🛠️ Current password:', currentAdminPassword);
+  console.log('Incoming:', username, password);
+  console.log('Current password:', currentAdminPassword);
 
   if (
     username === (process.env.ADMIN_USERNAME || 'admin') &&
@@ -109,8 +109,8 @@ app.post('/api/admin/login', async (req, res) => {
 app.post('/api/admin/change-password', authenticateToken, async (req, res) => {
   const { username, oldPassword, newPassword } = req.body;
   
-  console.log('🔐 Change password attempt:', { username, oldPassword: '***', newPassword: '***' });
-  console.log('🔐 Current password:', currentAdminPassword);
+  console.log('Change password attempt:', { username, oldPassword: '***', newPassword: '***' });
+  console.log('Current password:', currentAdminPassword);
   
   if (
     username === (process.env.ADMIN_USERNAME || 'admin') &&
@@ -118,15 +118,15 @@ app.post('/api/admin/change-password', authenticateToken, async (req, res) => {
   ) {
     // Update the stored password
     currentAdminPassword = newPassword;
-    console.log('✅ Password changed successfully');
+    console.log('Password changed successfully');
     return res.json({ success: true, message: 'Password changed successfully' });
   }
 
-  console.log('❌ Invalid current password');
+  console.log('Invalid current password');
   res.status(401).json({ success: false, error: 'Invalid current password' });
 });
 
-// 🔧 Protected Data Routes
+// Protected Data Routes
 
 app.get('/api/properties', async (req, res) => {
   const Property = mongoose.model('Property');
@@ -257,7 +257,7 @@ app.delete('/api/appointments/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// ❗ 404 & Error Fallbacks
+// 404 & Error Fallbacks
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
 });
@@ -266,21 +266,21 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server error', message: err.message });
 });
 
-// 🚀 Connect DB and Launch Server
+// Connect DB and Launch Server
 mongoose.connect(config.uri, config.options)
   .then(() => {
-    console.log(`✅ MongoDB connected in ${NODE_ENV} mode`);
+    console.log(`MongoDB connected in ${NODE_ENV} mode`);
     app.listen(PORT, () => {
       console.log(`
-🚀 Server running at http://localhost:${PORT}
-📱 API: /api/
-🏥 Health: /api/health
-🌍 ENV: ${NODE_ENV}
-📦 MongoDB: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'}
+Server running at http://localhost:${PORT}
+API: /api/
+Health: /api/health
+ENV: ${NODE_ENV}
+MongoDB: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'}
       `);
     });
   })
   .catch(err => {
-    console.error('❌ MongoDB failed to connect:', err.message);
+    console.error('MongoDB failed to connect:', err.message);
     process.exit(1);
   });
