@@ -81,6 +81,7 @@ html {
   padding: 0;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 }
 .navbar li a, .navbar li > a, .navbar li > Link {
   color: #7c9a6d;
@@ -93,32 +94,47 @@ html {
   flex-direction: column;
   cursor: pointer;
   margin-left: auto;
+  padding: 0.5rem;
+  z-index: 101;
 }
 .hamburger span {
   height: 3px;
   width: 25px;
   background: #7c9a6d;
-  margin: 4px 0;
+  margin: 3px 0;
   border-radius: 2px;
   transition: 0.3s;
 }
 @media (max-width: 768px) {
+  .navbar {
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+  }
   .navbar ul {
     display: none;
     flex-direction: column;
     background: #e9e4d5;
     position: absolute;
-    top: 60px;
+    top: 100%;
     left: 0;
     width: 100%;
     padding: 1rem 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    gap: 0.5rem;
+    flex-wrap: nowrap;
   }
   .navbar ul.open {
     display: flex;
   }
   .hamburger {
     display: flex;
+    margin-left: auto;
+  }
+  .nav-btn, .navbar li a, .navbar li > a, .navbar li > Link {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
   }
 }
 
