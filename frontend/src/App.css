@@ -72,6 +72,7 @@ html {
   width: 100%;
   box-sizing: border-box;
   overflow-x: auto;
+  overflow-y: visible;
 }
 .navbar ul {
   display: flex;
@@ -109,19 +110,21 @@ html {
   .navbar {
     justify-content: flex-start;
     padding: 0.75rem 1rem;
+    position: relative;
   }
   .navbar ul {
     display: none;
     flex-direction: column;
     background: #e9e4d5;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 60px;
     left: 0;
     width: 100%;
     padding: 1rem 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     gap: 0.5rem;
     flex-wrap: nowrap;
+    z-index: 99;
   }
   .navbar ul.open {
     display: flex;
