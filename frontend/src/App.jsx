@@ -17,6 +17,7 @@ import Contact from './components/Contact';
 import Appointment from './components/Appointment';
 import Properties from './components/Properties';
 import AdminPortal from './components/AdminPortal';
+import Dashboard from './components/Dashboard';
 import { PropertiesProvider } from './components/PropertiesContext';
 import Login from './components/Login';
 import Footer from './components/Footer';
@@ -44,6 +45,7 @@ const Navbar = () => {
         <li><button className="nav-btn" onClick={() => handleNav('contact')}>Contact</button></li>
         <li><Link className="nav-btn" to="/properties" onClick={() => setOpen(false)}>Properties</Link></li>
         <li><Link className="nav-btn" to="/appointment" onClick={() => setOpen(false)}>Appointment</Link></li>
+        <li><Link className="nav-btn" to="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link></li>
         <li><Link className="nav-btn" to="/admin" onClick={() => setOpen(false)}>Admin Portal</Link></li>
       </ul>
     </nav>
@@ -126,6 +128,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/appointment" element={<Appointment />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin" element={<AdminRoute />} />
             </Routes>
           </div>

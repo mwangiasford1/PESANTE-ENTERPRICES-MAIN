@@ -3,27 +3,30 @@ const Services = () => (
     <h2>Our Services</h2>
     <div className="service-list">
       <div className="service-card">
-        <h3>Property Management</h3>
+        <h3>Interactive Property Management</h3>
         <ul>
-          <li>Residential & Commercial leasing</li>
-          <li>Tenant support and repairs</li>
-          <li>Automated rent collection</li>
+          <li>Interactive property management dashboard</li>
+          <li>Real-time tenant communication</li>
+          <li>Automated rent collection and reporting</li>
+          <li>Maintenance request tracking</li>
         </ul>
       </div>
       <div className="service-card">
-        <h3>Construction Management</h3>
+        <h3>Smart Construction Management</h3>
         <ul>
-          <li>Project planning and supervision</li>
-          <li>Budget tracking and reporting</li>
-          <li>Contractor collaboration portal</li>
+          <li>Smart contractor and project scheduling</li>
+          <li>Materials procurement and budgeting tools</li>
+          <li>Project timeline optimization</li>
+          <li>Quality control monitoring</li>
         </ul>
       </div>
       <div className="service-card">
-        <h3>Land Marketing</h3>
+        <h3>Digital Land Services</h3>
         <ul>
-          <li>Listings with interactive maps</li>
-          <li>Land valuation tools</li>
-          <li>Lead capture forms for buyers and sellers</li>
+          <li>Digital land title vaults</li>
+          <li>Compliance and permit tracking</li>
+          <li>Land valuation and market analysis</li>
+          <li>Secure document management</li>
         </ul>
       </div>
     </div>

@@ -5,6 +5,11 @@ require('dotenv').config();
 require('./models/Property');
 require('./models/Inquiry');
 require('./models/Appointment');
+require('./models/Dashboard');
+require('./models/Project');
+require('./models/LandTitle');
+require('./models/Compliance');
+require('./models/Contractor');
 
 const express = require('express');
 const cors = require('cors');
@@ -254,6 +259,164 @@ app.delete('/api/appointments/:id', authenticateToken, async (req, res) => {
     res.json({ success: true, message: 'Appointment deleted successfully' });
   } catch (error) {
     res.status(400).json({ error: 'Invalid appointment ID' });
+  }
+});
+
+// Dashboard Routes
+app.get('/api/dashboard/:propertyId', authenticateToken, async (req, res) => {
+  const Dashboard = mongoose.model('Dashboard');
+  const dashboard = await Dashboard.findOne({ property_id: req.params.propertyId }).populate('property_id');
+  res.json(dashboard || { property_id: req.params.propertyId, metrics: {}, alerts: [] });
+});
+
+app.post('/api/dashboard', authenticateToken, validateRequired(['property_id']), async (req, res) => {
+  const Dashboard = mongoose.model('Dashboard');
+  const dashboard = new Dashboard({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  await dashboard.save();
+  res.status(201).json({ success: true, id: dashboard._id });
+});
+
+// Project Routes
+app.get('/api/projects', authenticateToken, async (req, res) => {
+  const Project = mongoose.model('Project');
+  const projects = await Project.find().populate('property_id contractor_id').sort({ created_at: -1 });
+  res.json(projects);
+});
+
+app.post('/api/projects', authenticateToken, validateRequired(['name', 'start_date', 'end_date', 'budget']), async (req, res) => {
+  const Project = mongoose.model('Project');
+  const project = new Project({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  await project.save();
+  res.status(201).json({ success: true, id: project._id });
+});
+
+app.put('/api/projects/:id', authenticateToken, async (req, res) => {
+  const Project = mongoose.model('Project');
+  try {
+    const project = await Project.findByIdAndUpdate(req.params.id, { ...req.body, updated_at: new Date() }, { new: true });
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+    res.json({ success: true, project });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid project ID' });
+  }
+});
+
+app.delete('/api/projects/:id', authenticateToken, async (req, res) => {
+  const Project = mongoose.model('Project');
+  try {
+    const project = await Project.findByIdAndDelete(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+    res.json({ success: true, message: 'Project deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid project ID' });
+  }
+});
+
+// Land Title Routes
+app.get('/api/land-titles', authenticateToken, async (req, res) => {
+  const LandTitle = mongoose.model('LandTitle');
+  const titles = await LandTitle.find().populate('property_id').sort({ created_at: -1 });
+  res.json(titles);
+});
+
+app.post('/api/land-titles', authenticateToken, validateRequired(['title_number', 'property_id', 'owner_name', 'land_size', 'location', 'registration_date']), async (req, res) => {
+  const LandTitle = mongoose.model('LandTitle');
+  const title = new LandTitle({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  await title.save();
+  res.status(201).json({ success: true, id: title._id });
+});
+
+app.put('/api/land-titles/:id', authenticateToken, async (req, res) => {
+  const LandTitle = mongoose.model('LandTitle');
+  try {
+    const title = await LandTitle.findByIdAndUpdate(req.params.id, { ...req.body, updated_at: new Date() }, { new: true });
+    if (!title) return res.status(404).json({ error: 'Land title not found' });
+    res.json({ success: true, title });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid land title ID' });
+  }
+});
+
+app.delete('/api/land-titles/:id', authenticateToken, async (req, res) => {
+  const LandTitle = mongoose.model('LandTitle');
+  try {
+    const title = await LandTitle.findByIdAndDelete(req.params.id);
+    if (!title) return res.status(404).json({ error: 'Land title not found' });
+    res.json({ success: true, message: 'Land title deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid land title ID' });
+  }
+});
+
+// Compliance Routes
+app.get('/api/compliance', authenticateToken, async (req, res) => {
+  const Compliance = mongoose.model('Compliance');
+  const compliance = await Compliance.find().populate('property_id').sort({ expiry_date: 1 });
+  res.json(compliance);
+});
+
+app.post('/api/compliance', authenticateToken, validateRequired(['property_id', 'permit_type', 'permit_number', 'issuing_authority', 'issue_date', 'expiry_date']), async (req, res) => {
+  const Compliance = mongoose.model('Compliance');
+  const permit = new Compliance({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  await permit.save();
+  res.status(201).json({ success: true, id: permit._id });
+});
+
+app.put('/api/compliance/:id', authenticateToken, async (req, res) => {
+  const Compliance = mongoose.model('Compliance');
+  try {
+    const permit = await Compliance.findByIdAndUpdate(req.params.id, { ...req.body, updated_at: new Date() }, { new: true });
+    if (!permit) return res.status(404).json({ error: 'Compliance record not found' });
+    res.json({ success: true, permit });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid compliance ID' });
+  }
+});
+
+app.delete('/api/compliance/:id', authenticateToken, async (req, res) => {
+  const Compliance = mongoose.model('Compliance');
+  try {
+    const permit = await Compliance.findByIdAndDelete(req.params.id);
+    if (!permit) return res.status(404).json({ error: 'Compliance record not found' });
+    res.json({ success: true, message: 'Compliance record deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid compliance ID' });
+  }
+});
+
+// Contractor Routes
+app.get('/api/contractors', authenticateToken, async (req, res) => {
+  const Contractor = mongoose.model('Contractor');
+  const contractors = await Contractor.find().sort({ rating: -1 });
+  res.json(contractors);
+});
+
+app.post('/api/contractors', authenticateToken, validateRequired(['name', 'company', 'phone', 'email', 'hourly_rate']), async (req, res) => {
+  const Contractor = mongoose.model('Contractor');
+  const contractor = new Contractor({ ...req.body, created_at: new Date(), updated_at: new Date() });
+  await contractor.save();
+  res.status(201).json({ success: true, id: contractor._id });
+});
+
+app.put('/api/contractors/:id', authenticateToken, async (req, res) => {
+  const Contractor = mongoose.model('Contractor');
+  try {
+    const contractor = await Contractor.findByIdAndUpdate(req.params.id, { ...req.body, updated_at: new Date() }, { new: true });
+    if (!contractor) return res.status(404).json({ error: 'Contractor not found' });
+    res.json({ success: true, contractor });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid contractor ID' });
+  }
+});
+
+app.delete('/api/contractors/:id', authenticateToken, async (req, res) => {
+  const Contractor = mongoose.model('Contractor');
+  try {
+    const contractor = await Contractor.findByIdAndDelete(req.params.id);
+    if (!contractor) return res.status(404).json({ error: 'Contractor not found' });
+    res.json({ success: true, message: 'Contractor deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid contractor ID' });
   }
 });
 
