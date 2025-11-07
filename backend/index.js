@@ -423,21 +423,31 @@ app.delete('/api/contractors/:id', authenticateToken, async (req, res) => {
 // Serve static files from React app in production
 if (NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
-  app.use(express.static(frontendPath));
   
-  // Serve index.html for all non-API routes (SPA routing)
-  app.get('*', (req, res) => {
-    // Skip API routes
+  // Serve static files (CSS, JS, images, etc.)
+  app.use(express.static(frontendPath, { index: false }));
+  
+  // Serve index.html for all non-API GET requests (SPA routing)
+  // This must be after static files but before error handlers
+  app.get('*', (req, res, next) => {
+    // Skip API routes - they should have been handled above
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
     }
-    // Serve index.html for all other routes
-    res.sendFile(path.join(frontendPath, 'index.html'));
+    // Serve index.html for all other routes (SPA fallback)
+    const indexPath = path.join(frontendPath, 'index.html');
+    res.sendFile(indexPath, (err) => {
+      if (err) {
+        console.error('Error serving index.html:', err);
+        next(err);
+      }
+    });
   });
 } else {
   // 404 & Error Fallbacks (development - API routes only)
+  // In development, frontend is served separately by Vite
   app.use('/api/*', (req, res) => {
-    res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
+    res.status(404).json({ error: 'Not Found', message: `API route ${req.originalUrl} not found` });
   });
 }
 
