@@ -420,10 +420,27 @@ app.delete('/api/contractors/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// 404 & Error Fallbacks
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
-});
+// Serve static files from React app in production
+if (NODE_ENV === 'production') {
+  const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
+  app.use(express.static(frontendPath));
+  
+  // Serve index.html for all non-API routes (SPA routing)
+  app.get('*', (req, res) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
+    }
+    // Serve index.html for all other routes
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
+} else {
+  // 404 & Error Fallbacks (development - API routes only)
+  app.use('/api/*', (req, res) => {
+    res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
+  });
+}
+
 app.use((err, req, res, next) => {
   console.error('Unhandled Error:', err);
   res.status(500).json({ error: 'Server error', message: err.message });
