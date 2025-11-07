@@ -18,6 +18,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const path = require('path');
+const fs = require('fs');
 const config = require('./config')[process.env.NODE_ENV || 'development'];
 
 const app = express();
@@ -420,36 +421,53 @@ app.delete('/api/contractors/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Serve static files from React app in production
-if (NODE_ENV === 'production') {
-  const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
+// Serve static files from React app
+// Check if dist folder exists to determine if we should serve frontend
+const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
+const frontendExists = fs.existsSync(frontendPath);
+
+if (frontendExists) {
+  console.log('📦 Frontend dist folder found - serving static files');
   
   // Serve static files (CSS, JS, images, etc.)
   app.use(express.static(frontendPath, { index: false }));
   
-  // Serve index.html for all non-API GET requests (SPA routing)
-  // This must be after static files but before error handlers
+  // Serve index.html for all non-API routes (SPA routing)
+  // This handles client-side routing for React Router
   app.get('*', (req, res, next) => {
-    // Skip API routes - they should have been handled above
+    // Always handle API routes separately
     if (req.path.startsWith('/api/')) {
-      return res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not found` });
+      return next(); // Let API routes be handled by the 404 handler below
     }
-    // Serve index.html for all other routes (SPA fallback)
+    
+    // For all other routes, serve index.html (React Router will handle routing)
     const indexPath = path.join(frontendPath, 'index.html');
     res.sendFile(indexPath, (err) => {
       if (err) {
-        console.error('Error serving index.html:', err);
+        console.error('❌ Error serving index.html:', err.message);
+        if (NODE_ENV === 'development') {
+          return res.status(500).json({ 
+            error: 'Frontend not available',
+            message: 'In development, please use the Vite dev server at http://localhost:5174',
+            details: err.message
+          });
+        }
         next(err);
       }
     });
   });
 } else {
-  // 404 & Error Fallbacks (development - API routes only)
-  // In development, frontend is served separately by Vite
-  app.use('/api/*', (req, res) => {
-    res.status(404).json({ error: 'Not Found', message: `API route ${req.originalUrl} not found` });
-  });
+  console.log('⚠️  Frontend dist folder not found - serving API only');
+  if (NODE_ENV === 'development') {
+    console.log('💡 Tip: Run "cd frontend && npm run build" to build the frontend');
+    console.log('💡 Or use the Vite dev server: "cd frontend && npm run dev"');
+  }
 }
+
+// 404 handler for API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({ error: 'Not Found', message: `API route ${req.originalUrl} not found` });
+});
 
 app.use((err, req, res, next) => {
   console.error('Unhandled Error:', err);

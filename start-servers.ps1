@@ -7,13 +7,18 @@ Start-Process -FilePath "cmd" -ArgumentList "/k", "cd backend && npm start" -Win
 Write-Host "⏳ Waiting for backend to start..." -ForegroundColor Cyan
 Start-Sleep -Seconds 3
 
-Write-Host "🌐 Starting Frontend Server (Port 5173)..." -ForegroundColor Yellow
+Write-Host "🌐 Starting Frontend Server (Port 5174)..." -ForegroundColor Yellow
 Start-Process -FilePath "cmd" -ArgumentList "/k", "cd frontend && npm run dev" -WindowStyle Normal
 
 Write-Host ""
 Write-Host "✅ Both servers are starting..." -ForegroundColor Green
 Write-Host "📱 Backend: http://localhost:5000" -ForegroundColor Cyan
-Write-Host "🌐 Frontend: http://localhost:5173" -ForegroundColor Cyan
+Write-Host "🌐 Frontend: http://localhost:5174" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "💡 To test routing fix:" -ForegroundColor Yellow
+Write-Host "   1. Navigate to http://localhost:5174/properties" -ForegroundColor White
+Write-Host "   2. Press F5 to refresh" -ForegroundColor White
+Write-Host "   3. Should NOT show 404 error" -ForegroundColor White
 Write-Host ""
 Write-Host "Press any key to exit this launcher..." -ForegroundColor Gray
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") 
