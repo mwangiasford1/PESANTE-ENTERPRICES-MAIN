@@ -137,9 +137,9 @@ const AdminPortal = () => {
       try {
         const [propertiesData, projectsData, complianceData, contractorsData] = await Promise.all([
           getProperties(),
-          fetch('/api/projects', { headers: { Authorization: `Bearer ${localStorage.getItem('pesante_admin_token')}` } }).then(r => r.json()).catch(() => []),
-          fetch('/api/compliance', { headers: { Authorization: `Bearer ${localStorage.getItem('pesante_admin_token')}` } }).then(r => r.json()).catch(() => []),
-          fetch('/api/contractors', { headers: { Authorization: `Bearer ${localStorage.getItem('pesante_admin_token')}` } }).then(r => r.json()).catch(() => [])
+          getProjects(),
+          getCompliance(),
+          getContractors()
         ]);
         setDashboardData({
           totalProperties: propertiesData.length,
@@ -508,7 +508,7 @@ const AdminPortal = () => {
       return;
     }
     try {
-      const titleData = { title_number: titleNumber, property_id: properties[0]?._id, owner_name: ownerName, land_size: parseFloat(landSize), location: titleLocation, registration_date: registrationDate };
+      const titleData = { title_number: titleNumber, owner_name: ownerName, land_size: parseFloat(landSize), location: titleLocation, registration_date: registrationDate };
       if (titleEditId) {
         await updateLandTitle(titleEditId, titleData);
         showToast('Land title updated!');
@@ -557,7 +557,7 @@ const AdminPortal = () => {
       return;
     }
     try {
-      const complianceData = { property_id: properties[0]?._id, permit_type: permitType, permit_number: permitNumber, issuing_authority: issuingAuthority, issue_date: issueDate, expiry_date: expiryDate };
+      const complianceData = { permit_type: permitType, permit_number: permitNumber, issuing_authority: issuingAuthority, issue_date: issueDate, expiry_date: expiryDate };
       if (complianceEditId) {
         await updateCompliance(complianceEditId, complianceData);
         showToast('Compliance updated!');
@@ -834,11 +834,11 @@ const AdminPortal = () => {
         ) : (
           <ul>
             {inquiries.map(i => (
-              <li key={i.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'1rem'}}>
+              <li key={i._id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'1rem'}}>
                 <span>{i.name}: {i.message}</span>
                 <span style={{display:'flex',gap:'0.5rem'}}>
                   <button onClick={() => handleInqEdit(i)} style={{background:'#7c9a6d',color:'#fff',border:'none',borderRadius:'5px',padding:'2px 8px',cursor:'pointer'}}>Edit</button>
-                  <button onClick={() => deleteInquiryHandler(i.id)} style={{background:'#c0392b',color:'#fff',border:'none',borderRadius:'5px',padding:'2px 8px',cursor:'pointer'}}>Delete</button>
+                  <button onClick={() => deleteInquiryHandler(i._id)} style={{background:'#c0392b',color:'#fff',border:'none',borderRadius:'5px',padding:'2px 8px',cursor:'pointer'}}>Delete</button>
                 </span>
               </li>
             ))}

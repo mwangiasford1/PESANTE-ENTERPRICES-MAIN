@@ -1,11 +1,11 @@
 services:
-  # Backend API
+  # Backend API (serves frontend in production)
   - type: web
     name: pesante-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    buildCommand: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
+    startCommand: npm start --prefix backend
     envVars:
       - key: NODE_ENV
         value: production
@@ -23,11 +23,3 @@ services:
         value: mwangi2024
       - key: FRONTEND_URLS
         value: https://pesante-enterprices-main-1.onrender.com,http://localhost:5174
-
-  # Frontend
-  - type: web
-    name: pesante-frontend
-    env: static
-    plan: free
-    buildCommand: cd frontend && npm install && NODE_ENV=production npm run build
-    staticPublishPath: frontend/dist

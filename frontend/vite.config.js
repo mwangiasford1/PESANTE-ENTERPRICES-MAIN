@@ -10,9 +10,21 @@ export default defineConfig({
   server: {
     open: true, // 🚀 Automatically opens browser on dev start
     port: 5174, // Use port 5174 since 5173 is in use
+    // Ensure SPA routing works - Vite handles this automatically, but we can be explicit
+    strictPort: false,
     proxy: {
-      '/api': 'http://localhost:3001' // 🔁 Local backend proxy for API routes
+      '/api': {
+        target: 'http://localhost:5000', // 🔁 Local backend proxy for API routes
+        changeOrigin: true,
+        secure: false
+      }
     }
+  },
+  
+  // Preview server configuration (for testing production build locally)
+  preview: {
+    port: 5174,
+    strictPort: false
   },
 
   // ⚙️ Ensures JSX is compiled properly for production

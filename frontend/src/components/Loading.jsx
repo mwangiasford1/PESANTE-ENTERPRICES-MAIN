@@ -18,7 +18,7 @@ const Loading = ({ message = "Loading..." }) => (
     }}></div>
     {message}
     <style>{`
-      @keyframes spin {
+      @keyframes spin {why after refreshing Not Found
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
