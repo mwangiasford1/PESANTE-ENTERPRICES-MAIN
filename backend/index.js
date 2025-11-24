@@ -423,7 +423,7 @@ app.delete('/api/contractors/:id', authenticateToken, async (req, res) => {
 
 // Serve static files from React app
 // Check if dist folder exists to determine if we should serve frontend
-const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
+const frontendPath = path.resolve(__dirname, '..', 'frontend', 'dist');
 const frontendExists = fs.existsSync(frontendPath);
 
 if (frontendExists) {
