@@ -421,49 +421,6 @@ app.delete('/api/contractors/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Serve static files from React app
-// Check if dist folder exists to determine if we should serve frontend
-const frontendPath = path.resolve(__dirname, '..', 'frontend', 'dist');
-const frontendExists = fs.existsSync(frontendPath);
-
-if (frontendExists) {
-  console.log('📦 Frontend dist folder found - serving static files');
-  
-  // Serve static files (CSS, JS, images, etc.)
-  app.use(express.static(frontendPath, { index: false }));
-  
-  // Serve index.html for all non-API routes (SPA routing)
-  // This handles client-side routing for React Router
-  app.get('*', (req, res, next) => {
-    // Always handle API routes separately
-    if (req.path.startsWith('/api/')) {
-      return next(); // Let API routes be handled by the 404 handler below
-    }
-    
-    // For all other routes, serve index.html (React Router will handle routing)
-    const indexPath = path.join(frontendPath, 'index.html');
-    res.sendFile(indexPath, (err) => {
-      if (err) {
-        console.error('❌ Error serving index.html:', err.message);
-        if (NODE_ENV === 'development') {
-          return res.status(500).json({ 
-            error: 'Frontend not available',
-            message: 'In development, please use the Vite dev server at http://localhost:5174',
-            details: err.message
-          });
-        }
-        next(err);
-      }
-    });
-  });
-} else {
-  console.log('⚠️  Frontend dist folder not found - serving API only');
-  if (NODE_ENV === 'development') {
-    console.log('💡 Tip: Run "cd frontend && npm run build" to build the frontend');
-    console.log('💡 Or use the Vite dev server: "cd frontend && npm run dev"');
-  }
-}
-
 // 404 handler for API routes
 app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'Not Found', message: `API route ${req.originalUrl} not found` });
